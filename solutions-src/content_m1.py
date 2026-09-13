@@ -1284,4 +1284,822 @@ it easy is the <b>units reconciliation</b> &mdash; do it first and the whole ans
 # ======================================================================
 def build():
     return (opener() + q1() + q2() + q3() + q4() + q5()
-            + q6() + q7() + q8() + q9())
+            + q6() + q7() + q8() + q9() + q10() + q11() + q12()
+            + q13() + q14() + q15() + q16())
+
+
+
+# ======================================================================
+# shared helper: reverse-cost working for joint / by-products
+# ======================================================================
+def reverse_cost(caption, prods, rows, note=None):
+    """rows = list of (label, [values per product]) ; values pre-formatted strings"""
+    head = [("Particulars", "")] + [(p, "r") for p in prods]
+    body = []
+    for r in rows:
+        cls = r[2] if len(r) > 2 else ""
+        body.append({"cls": cls, "cells": [r[0]] + [(v, "r") for v in r[1]]})
+    t = table(caption, head, body)
+    if note:
+        t += f"<div class='small'>{note}</div>"
+    return t
+
+
+REVERSE_LADDER = None
+
+
+def ladder_dia():
+    return arrow_panel(500, 150, [
+        {"box": (120, 4, 260, 20, "SELLING PRICE (given)", "#e8eef4"), "fs": 8.4},
+        {"box": (120, 32, 260, 20, "less  PROFIT  (given % of sales)", "#fdeeec"), "fs": 8.0,
+         "stroke": "#c0392b", "fg": "#98271b"},
+        {"box": (120, 60, 260, 20, "less  SELLING EXPENSES (given %)", "#fdeeec"), "fs": 8.0,
+         "stroke": "#c0392b", "fg": "#98271b"},
+        {"box": (120, 88, 260, 20, "=  TOTAL COST of that product", "#eaf5f4"), "fs": 8.4},
+        {"box": (120, 116, 260, 20, "less COST AFTER SEPARATION  =  SHARE OF JOINT COST",
+                 "#eef7ee"), "fs": 7.8, "stroke": "#2c7a34", "fg": "#1f5b26"},
+        {"line": (250, 24, 250, 30)}, {"line": (250, 52, 250, 58)},
+        {"line": (250, 80, 250, 86)}, {"line": (250, 108, 250, 114)},
+        {"arc": (118, 14, 60, 100, "you climb DOWN", 40), "col": "#c0392b"},
+        {"txt": (444, 74, "the answer", 7.8, "#1f5b26", "middle")},
+    ], "The reverse-cost ladder. Every joint / by-product problem in Q10 to Q14 is this one picture.")
+
+
+# ======================================================================
+# PROBLEM 10
+# ======================================================================
+def q10():
+    q = f"""<p>In manufacturing the main product a company processes the incidental waste into
+two by-products A and B. From the following data relating to the products prepare a comparative
+profit &amp; loss statement showing individual cost and other details. The total cost up to
+separation point was <span class="rs">{R}</span>3,10,400.</p>
+{table(None, [("Particulars",""),("Main product","r"),("Product A","r"),("Product B","r")],
+ [["Sales","8,00,000","64,000","96,000"],
+  ["Cost after separation","80,000","12,800","14,400"],
+  ["Estimated net profit (% of sales)","?","20%","30%"],
+  ["Estimated selling expenses (% of sales)","20%","10%","15%"]], headcls="lite")}"""
+
+    rd = f"""{bullets([
+ 'The main product&rsquo;s profit is a <b>question mark</b>. That tells you the whole plan: work out '
+ 'the two by-products completely, take their joint-cost shares away from '
+ f'<span class="rs">{R}</span>3,10,400, and whatever is left belongs to the main product.',
+ 'You are given <b>profit % and selling-expense % for A and B</b>. That is the signal for the '
+ '<b>reverse-cost method</b> &mdash; start at sales and climb down.',
+ 'All percentages here are <b>of sales</b>, not of cost. Read the bracket every time.',
+ '&ldquo;Comparative profit &amp; loss statement&rdquo; means one table with a column per product '
+ 'and a total column. Give the total column &mdash; it is where the cross-check lives.'])}"""
+
+    mt = steps([
+        "For each by-product, start with sales. Subtract profit (% of sales). Subtract selling "
+        "expenses (% of sales). What remains is that product's <b>total cost</b>.",
+        "Subtract its cost after separation. What remains is its <b>share of the joint cost</b>.",
+        "Add the by-products' shares. Subtract from the total joint cost. The balance is the "
+        "<b>main product's share</b>.",
+        "Now build the main product's column forwards: joint share + cost after separation + "
+        "selling expenses = total cost; sales &minus; total cost = profit.",
+        "Express the main product's profit as a % of its sales &mdash; that is the missing '?'.",
+        "Cross-check: every column's total cost + profit must equal its sales."])
+
+    wnh = f"""<h4 class="mini">W1 &nbsp;Product A &mdash; climbing down from sales</h4>
+{calc(['Sales &nbsp;=&nbsp; 64,000',
+       'Less: Net profit &nbsp; 20% of 64,000 &nbsp;=&nbsp; (12,800)',
+       'Less: Selling expenses &nbsp; 10% of 64,000 &nbsp;=&nbsp; (6,400)',
+       '<b>Total cost &nbsp;=&nbsp; 44,800</b>',
+       'Less: Cost after separation &nbsp;=&nbsp; (12,800)',
+       f'<b>Share of joint cost &nbsp;=&nbsp; {R}32,000</b>'])}
+
+<h4 class="mini">W2 &nbsp;Product B &mdash; same ladder</h4>
+{calc(['Sales &nbsp;=&nbsp; 96,000',
+       'Less: Net profit &nbsp; 30% of 96,000 &nbsp;=&nbsp; (28,800)',
+       'Less: Selling expenses &nbsp; 15% of 96,000 &nbsp;=&nbsp; (14,400)',
+       '<b>Total cost &nbsp;=&nbsp; 52,800</b>',
+       'Less: Cost after separation &nbsp;=&nbsp; (14,400)',
+       f'<b>Share of joint cost &nbsp;=&nbsp; {R}38,400</b>'])}
+
+<h4 class="mini">W3 &nbsp;Main product&rsquo;s share is whatever is left</h4>
+{calc([f'Total joint cost &nbsp;=&nbsp; 3,10,400',
+       'Less: Product A&rsquo;s share (W1) &nbsp;=&nbsp; (32,000)',
+       'Less: Product B&rsquo;s share (W2) &nbsp;=&nbsp; (38,400)',
+       f'<b>Main product&rsquo;s share of joint cost &nbsp;=&nbsp; {R}2,40,000</b>'])}"""
+
+    stmt = reverse_cost("Comparative Profit and Loss Statement",
+        ["Main product", "Product A", "Product B", "Total"],
+        [("Sales", ["8,00,000", "64,000", "96,000", "9,60,000"]),
+         ("Share of joint cost &nbsp;<span class='src' style='display:inline'>(W1&ndash;W3)</span>",
+          ["2,40,000", "32,000", "38,400", "3,10,400"]),
+         ("Cost after separation", ["80,000", "12,800", "14,400", "1,07,200"]),
+         ("Selling expenses", ["1,60,000", "6,400", "14,400", "1,80,800"]),
+         ("<b>Total cost</b>", ["<b>4,80,000</b>", "<b>51,200</b>", "<b>67,200</b>",
+                                "<b>5,98,400</b>"], "tot"),
+         ("<b>Net profit</b> (Sales &minus; Total cost)",
+          ["<b>3,20,000</b>", "<b>12,800</b>", "<b>28,800</b>", "<b>3,61,600</b>"], "tot"),
+         ("Net profit as % of sales", ["<b>40%</b>", "20%", "30%", "37.67%"], "sub")],
+        "Selling expenses: main 20% of 8,00,000 = 1,60,000 &nbsp;|&nbsp; A 10% of 64,000 = 6,400 "
+        "&nbsp;|&nbsp; B 15% of 96,000 = 14,400.")
+
+    return ("<div class='prob long'>"
+            + prob_head("Q10", "Main product + two by-products", "Joint &amp; by-product &middot; p.11")
+            + question(q) + read(rd) + method(mt) + ladder_dia() + wn(wnh) + stmt
+            + trap(bullets([
+                'Taking the profit % on <b>cost</b> instead of on sales. Here everything is on sales.',
+                'Forgetting to subtract selling expenses on the way down. If you skip them, '
+                'A&rsquo;s joint share comes to 38,400 instead of 32,000 and the whole answer shifts.',
+                'Apportioning the joint cost by sales value or by weight. The question gives you '
+                'profit and selling-expense percentages precisely so you use the reverse-cost method.']))
+            + ans([("Joint cost &mdash; Main product", f"{R} 2,40,000"),
+                   ("Joint cost &mdash; Product A", f"{R} 32,000"),
+                   ("Joint cost &mdash; Product B", f"{R} 38,400"),
+                   ("Main product&rsquo;s net profit", f"{R} 3,20,000 &nbsp;(<b>40% of sales</b>)"),
+                   ("Total profit of all three", f"{R} 3,61,600")],
+                  "Cross-check each column: 4,80,000 + 3,20,000 = 8,00,000 &#10003; &nbsp; "
+                  "51,200 + 12,800 = 64,000 &#10003; &nbsp; 67,200 + 28,800 = 96,000 &#10003;")
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 11
+# ======================================================================
+def q11():
+    q = f"""<p>A factory producing an article &lsquo;X&rsquo; also produces product
+&lsquo;Y&rsquo; which is further processed into a finished product. The joint cost of
+manufacturing is: Materials 50,000; Labour 30,000; Overheads 20,000 &mdash; total
+<span class="rs">{R}</span>1,00,000. The subsequent costs are as follows:</p>
+{table(None, [("Particulars",""),("X","r"),("Y","r")],
+ [["Materials","30,000","15,000"],["Labour","14,000","10,000"],
+  ["Overheads","6,000","5,000"],
+  {"cls":"tot","cells":["<b>Total</b>","<b>50,000</b>","<b>30,000</b>"]},
+  ["Selling price","1,60,000","80,000"],
+  ["Estimated profit on selling price","25%","20%"]], headcls="lite")}
+<p>Assume that the selling and distribution expenses are in proportion to the selling price.
+Show how you would apportion the joint cost of manufacturing and prepare a statement showing the
+cost of production of both products and the ledger accounts.</p>"""
+
+    rd = f"""{bullets([
+ 'This one has a hidden step. The <b>selling and distribution expenses are not given</b> &mdash; '
+ 'you must derive the total, then split it.',
+ 'How to derive it: total sales 2,40,000 minus total profit gives total cost. Take away the '
+ 'costs you already know (joint 1,00,000 + subsequent 80,000) and the gap must be the S&amp;D '
+ 'expenses.',
+ '&ldquo;In proportion to the selling price&rdquo; &mdash; so split in the ratio '
+ '1,60,000 : 80,000 = <b>2 : 1</b>.',
+ 'Then it is the ordinary reverse-cost ladder for each product.'])}"""
+
+    mt = steps([
+        "Compute each product's profit from the given % of selling price. Add them.",
+        "Total cost = Total sales &minus; Total profit.",
+        "<b>S&amp;D expenses = Total cost &minus; joint cost &minus; subsequent costs.</b> "
+        "This is the derived figure.",
+        "Split the S&amp;D expenses in the ratio of selling prices.",
+        "For each product climb down: Sales &minus; profit = total cost; then &minus; S&amp;D "
+        "&minus; subsequent cost = share of joint cost.",
+        "Check the two joint shares add back to 1,00,000."])
+
+    wnh = f"""<h4 class="mini">W1 &nbsp;Deriving the selling &amp; distribution expenses</h4>
+{calc(['Profit on X &nbsp;=&nbsp; 25% of 1,60,000 &nbsp;=&nbsp; 40,000',
+       'Profit on Y &nbsp;=&nbsp; 20% of 80,000 &nbsp;=&nbsp; 16,000',
+       '<b>Total profit &nbsp;=&nbsp; 56,000</b>',
+       'Total sales &nbsp;=&nbsp; 1,60,000 + 80,000 &nbsp;=&nbsp; 2,40,000',
+       'Total cost &nbsp;=&nbsp; 2,40,000 &minus; 56,000 &nbsp;=&nbsp; <b>1,84,000</b>',
+       'Known costs &nbsp;=&nbsp; joint 1,00,000 + subsequent 80,000 &nbsp;=&nbsp; 1,80,000',
+       f'<b>&there4; S&amp;D expenses &nbsp;=&nbsp; 1,84,000 &minus; 1,80,000 &nbsp;=&nbsp; {R}4,000</b>'])}
+{calc(['Split 2 : 1 &nbsp;&rarr;&nbsp; X &nbsp;=&nbsp; 4,000 &times; 2/3 &nbsp;=&nbsp; '
+       '<b>2,666.67</b> &nbsp;&nbsp;|&nbsp;&nbsp; Y &nbsp;=&nbsp; 4,000 &times; 1/3 &nbsp;=&nbsp; '
+       '<b>1,333.33</b>'])}
+
+<h4 class="mini">W2 &nbsp;Apportionment of the joint cost</h4>
+{table(None, [("Particulars",""),("Product X","r"),("Product Y","r"),("Total","r")],
+ [["Selling price","1,60,000","80,000","2,40,000"],
+  ["Less: Estimated profit","(40,000)","(16,000)","(56,000)"],
+  {"cls":"sub","cells":["<b>Total cost</b>","<b>1,20,000</b>","<b>64,000</b>","<b>1,84,000</b>"]},
+  ["Less: Selling &amp; distribution (W1)","(2,666.67)","(1,333.33)","(4,000)"],
+  ["Less: Subsequent cost","(50,000)","(30,000)","(80,000)"],
+  {"cls":"tot","cells":["<b>Share of joint cost</b>","<b>67,333.33</b>","<b>32,666.67</b>",
+                        "<b>1,00,000</b>"]}], headcls="lite")}
+<p class="small"><b>Cross-check:</b> 67,333.33 + 32,666.67 = 1,00,000 &#10003; exactly the joint
+cost given. That agreement is your proof the method is right.</p>"""
+
+    stmt = reverse_cost("Statement of Cost of Production and Profit",
+        ["Product X", "Product Y", "Total"],
+        [("Share of joint cost &nbsp;<span class='src' style='display:inline'>(W2)</span>",
+          ["67,333.33", "32,666.67", "1,00,000"]),
+         ("Subsequent cost &mdash; materials", ["30,000", "15,000", "45,000"]),
+         ("Subsequent cost &mdash; labour", ["14,000", "10,000", "24,000"]),
+         ("Subsequent cost &mdash; overheads", ["6,000", "5,000", "11,000"]),
+         ("<b>Cost of production</b>", ["<b>1,17,333.33</b>", "<b>62,666.67</b>",
+                                        "<b>1,80,000</b>"], "sub"),
+         ("Selling &amp; distribution expenses", ["2,666.67", "1,333.33", "4,000"]),
+         ("<b>Total cost</b>", ["<b>1,20,000</b>", "<b>64,000</b>", "<b>1,84,000</b>"], "tot"),
+         ("Sales", ["1,60,000", "80,000", "2,40,000"]),
+         ("<b>Profit</b>", ["<b>40,000</b>", "<b>16,000</b>", "<b>56,000</b>"], "tot"),
+         ("Profit as % of selling price", ["25%", "20%", "23.33%"], "sub")])
+
+    px = acct("Product X Account", 
+      [("To Joint cost apportioned", "", "", 67333.33),
+       ("To Materials", "", "", 30000),
+       ("To Labour", "", "", 14000),
+       ("To Overheads", "", "", 6000),
+       ("To Selling &amp; distribution" + src("W1: 4,000 &times; 2/3"), "", "", 2666.67),
+       ("To Profit &amp; Loss A/c (profit)", "", "", 40000),
+       ("TOT", "", "", 160000)],
+      [("By Sales", "", "", 160000), None, None, None, None, None,
+       ("TOT", "", "", 160000)], units=False)
+
+    py = acct("Product Y Account",
+      [("To Joint cost apportioned", "", "", 32666.67),
+       ("To Materials", "", "", 15000),
+       ("To Labour", "", "", 10000),
+       ("To Overheads", "", "", 5000),
+       ("To Selling &amp; distribution" + src("W1: 4,000 &times; 1/3"), "", "", 1333.33),
+       ("To Profit &amp; Loss A/c (profit)", "", "", 16000),
+       ("TOT", "", "", 80000)],
+      [("By Sales", "", "", 80000), None, None, None, None, None,
+       ("TOT", "", "", 80000)], units=False)
+
+    return ("<div class='prob long'>"
+            + prob_head("Q11", "Selling expenses have to be derived",
+                        "Joint &amp; by-product &middot; p.11")
+            + question(q) + read(rd) + method(mt) + wn(wnh) + stmt + px + py
+            + why("<p>The reason the S&amp;D expenses can be derived at all is that the question "
+                  "fixes the profit on <i>both</i> products. Once profit is fixed, total cost is "
+                  "fixed, and any cost you have not been told about must be the difference. "
+                  "Whenever a joint-cost question gives you every profit percentage but leaves one "
+                  "cost unnamed, this is the trick being tested.</p>")
+            + ans([("Joint cost apportioned to X", f"{R} 67,333.33"),
+                   ("Joint cost apportioned to Y", f"{R} 32,666.67"),
+                   ("Selling &amp; distribution expenses (derived)", f"{R} 4,000"),
+                   ("Cost of production &mdash; X", f"{R} 1,17,333.33"),
+                   ("Cost of production &mdash; Y", f"{R} 62,666.67"),
+                   ("Total profit", f"{R} 56,000")])
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 12
+# ======================================================================
+def q12():
+    q = f"""<p>In a manufacturing concern a certain product is manufactured which also yields
+2 by-products. The joint expenses of manufacture are: Materials 8,500; Labour 9,000;
+Overheads 7,500 &mdash; total <span class="rs">{R}</span>25,000. Subsequent expenses are:</p>
+{table(None, [("Particulars",""),("A","r"),("B","r"),("C","r")],
+ [["Materials","2,500","1,200","1,400"],["Labour","1,900","1,600","2,000"],
+  ["Overheads","1,500","900","1,050"],
+  {"cls":"tot","cells":["<b>Total</b>","<b>5,900</b>","<b>3,700</b>","<b>4,450</b>"]}],
+ headcls="lite")}
+<p>The selling prices are A &mdash; 30,000; B &mdash; 20,000 and C &mdash; 15,000. Estimated
+profits on selling prices are A &mdash; 40%; B &mdash; 30% and C &mdash; 25%. Show the
+apportionment of joint cost and prepare the product accounts.</p>"""
+
+    rd = f"""{bullets([
+ 'Same ladder as Q10 and Q11, but with <b>no selling expenses</b> mentioned &mdash; so the ladder '
+ 'is shorter: Sales &minus; profit &minus; subsequent cost = share of joint cost.',
+ '<b>Read the warning below before you write your answer.</b> The figures in this question do '
+ 'not reconcile, and knowing how to handle that is worth more than getting a tidy number.'])}"""
+
+    mt = steps([
+        "For each product: Sales &minus; profit (% of sales) = total cost.",
+        "Total cost &minus; subsequent cost = <b>notional share of joint cost</b>.",
+        "Add the three notional shares and <b>compare with the actual joint cost</b>.",
+        "If they agree, you are finished. <b>If they do not agree</b> (as here), apportion the "
+        "<i>actual</i> joint cost in the <i>ratio</i> of the notional shares.",
+        "Recompute each product's real profit using its apportioned share, and state that the "
+        "actual profit differs from the estimate."])
+
+    wnh = f"""<h4 class="mini">W1 &nbsp;Notional share of joint cost by reverse cost</h4>
+{table(None, [("Particulars",""),("A","r"),("B","r"),("C","r"),("Total","r")],
+ [["Selling price","30,000","20,000","15,000","65,000"],
+  ["Less: Estimated profit (40% / 30% / 25%)","(12,000)","(6,000)","(3,750)","(21,750)"],
+  {"cls":"sub","cells":["<b>Total cost</b>","<b>18,000</b>","<b>14,000</b>","<b>11,250</b>",
+                        "<b>43,250</b>"]},
+  ["Less: Subsequent expenses","(5,900)","(3,700)","(4,450)","(14,050)"],
+  {"cls":"tot","cells":["<b>Notional share of joint cost</b>","<b>12,100</b>","<b>10,300</b>",
+                        "<b>6,800</b>","<b>29,200</b>"]}], headcls="lite")}
+
+<h4 class="mini">W2 &nbsp;The figures do not reconcile &mdash; and here is how to deal with it</h4>
+{calc(['Notional shares add to &nbsp;=&nbsp; <b>29,200</b>',
+       'Actual joint expenses are only &nbsp;=&nbsp; <b>25,000</b>',
+       f'Difference &nbsp;=&nbsp; <b>{R}4,200</b> &mdash; the estimated profits are more '
+       'optimistic than the actual cost structure allows.'])}
+<p>The joint cost that actually exists is 25,000, so that is all you can apportion.
+Apportion it in the <b>ratio of the notional shares</b> 12,100 : 10,300 : 6,800.</p>
+{table(None, [("Product",""),("Notional share","r"),("Working","r"),("Apportioned joint cost","r")],
+ [["A","12,100","25,000 &times; 12,100 / 29,200","<b>10,359.59</b>"],
+  ["B","10,300","25,000 &times; 10,300 / 29,200","<b>8,818.49</b>"],
+  ["C","6,800","25,000 &times; 6,800 / 29,200","<b>5,821.92</b>"],
+  {"cls":"tot","cells":["<b>Total</b>","<b>29,200</b>","","<b>25,000.00</b>"]}], headcls="lite")}"""
+
+    stmt = reverse_cost("Statement of Cost and Actual Profit",
+        ["A", "B", "C", "Total"],
+        [("Apportioned joint cost &nbsp;<span class='src' style='display:inline'>(W2)</span>",
+          ["10,359.59", "8,818.49", "5,821.92", "25,000"]),
+         ("Subsequent expenses", ["5,900", "3,700", "4,450", "14,050"]),
+         ("<b>Total cost</b>", ["<b>16,259.59</b>", "<b>12,518.49</b>", "<b>10,271.92</b>",
+                                "<b>39,050</b>"], "tot"),
+         ("Sales", ["30,000", "20,000", "15,000", "65,000"]),
+         ("<b>Actual profit</b>", ["<b>13,740.41</b>", "<b>7,481.51</b>", "<b>4,728.08</b>",
+                                   "<b>25,950</b>"], "tot"),
+         ("Actual profit as % of sales", ["45.80%", "37.41%", "31.52%", "39.92%"], "sub"),
+         ("Estimated profit % (from the question)", ["40%", "30%", "25%", "&mdash;"], "sub")])
+
+    accts = ""
+    for name, jc, sub, sales, prof in [("A", 10359.59, 5900, 30000, 13740.41),
+                                       ("B", 8818.49, 3700, 20000, 7481.51),
+                                       ("C", 5821.92, 4450, 15000, 4728.08)]:
+        accts += acct(f"Product {name} Account",
+          [("To Joint cost apportioned" + src("W2"), "", "", jc),
+           ("To Subsequent expenses", "", "", sub),
+           ("To Profit &amp; Loss A/c (profit)", "", "", prof),
+           ("TOT", "", "", sales)],
+          [("By Sales", "", "", sales), None, None, ("TOT", "", "", sales)], units=False)
+
+    return ("<div class='prob long'>"
+            + prob_head("Q12", "When the printed figures do not reconcile",
+                        "Joint &amp; by-product &middot; p.11&ndash;12")
+            + question(q) + read(rd) + method(mt) + wn(wnh) + stmt + accts
+            + trap(f"""<p><b>Please read this one carefully &mdash; it is about your exam, not just
+this sum.</b></p>
+{bullets([
+ 'The notional shares total 29,200 but the joint expenses are 25,000. As printed, the question '
+ 'cannot give a tidy answer. This happens in workbooks.',
+ 'The <b>wrong</b> response is to write 12,100 / 10,300 / 6,800 as your apportionment. Those '
+ f'figures add to 29,200, which is {R}4,200 more joint cost than the company actually incurred.',
+ 'The <b>right</b> response is what W2 does: apportion the real 25,000 in the ratio of the '
+ 'notional shares, then show the actual profit percentages and note that they exceed the '
+ 'estimates. Write one sentence saying so. An examiner rewards a student who spots the '
+ 'inconsistency and handles it openly.',
+ '<b>Do check this one with your professor</b> &mdash; if he teaches the plain notional-share '
+ 'answer, give that instead. Either way, understand why the two differ.'])}""")
+            + ans([("Apportioned joint cost &mdash; A", f"{R} 10,359.59"),
+                   ("Apportioned joint cost &mdash; B", f"{R} 8,818.49"),
+                   ("Apportioned joint cost &mdash; C", f"{R} 5,821.92"),
+                   ("Total actual profit", f"{R} 25,950"),
+                   ("Notional shares (for the ratio only)", "12,100 : 10,300 : 6,800")])
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 13
+# ======================================================================
+def q13():
+    q = f"""<p>Bright Chemical Ltd. electrolyses common salt to obtain 3 joint products &mdash;
+caustic soda, chlorine and hydrogen. During a costing period, the expenditure relating to the
+inputs of the common process amounted to <span class="rs">{R}</span>3,50,000. After separation,
+expenses amounting to <span class="rs">{R}</span>1,60,000,
+<span class="rs">{R}</span>75,000 and <span class="rs">{R}</span>10,000 were incurred for caustic
+soda, chlorine and hydrogen respectively. The entire production was sold and
+<span class="rs">{R}</span>3,75,000, <span class="rs">{R}</span>2,50,000 and
+<span class="rs">{R}</span>60,000 were realised for caustic soda, chlorine and hydrogen
+respectively. The selling expenses were estimated at 5% of realisation from sale. The profit is
+15%, 10% and 5% of realisation from sale of caustic soda, chlorine and hydrogen respectively.</p>
+<p>Draw a columnar statement showing the apportionment of joint cost and the profitability of
+each product.</p>"""
+
+    rd = f"""{bullets([
+ 'The full four-rung ladder this time: Sales &minus; profit &minus; selling expenses &minus; '
+ 'separation expenses = share of joint cost.',
+ 'Selling expenses are <b>5% of sales for all three</b> &mdash; one rate, three amounts.',
+ 'These are <b>joint products</b>, not by-products. That changes nothing about the arithmetic; '
+ 'it only means all three are commercially important, so none is credited to another.',
+ 'Like Q12, the derived shares here <b>do not</b> add up to the joint cost given. The same '
+ 'ratio treatment applies. Do not be alarmed &mdash; be systematic.'])}"""
+
+    mt = steps([
+        "Build the ladder in a single columnar table &mdash; one column per product, one total column.",
+        "Row 1 Sales. Row 2 less profit. Row 3 less selling expenses (5% of sales). "
+        "Row 4 gives total cost.",
+        "Row 5 less separation expenses. Row 6 gives the notional joint-cost share.",
+        "Total row 6 and compare with the actual joint cost of 3,50,000.",
+        "Apportion the actual 3,50,000 in the ratio of the notional shares.",
+        "Rebuild each column forwards to show the actual profitability, and comment on how it "
+        "compares with the estimate."])
+
+    wnh = f"""<h4 class="mini">W1 &nbsp;The reverse-cost ladder, all three products together</h4>
+{table(None, [("Particulars",""),("Caustic soda","r"),("Chlorine","r"),("Hydrogen","r"),("Total","r")],
+ [["Sales realisation","3,75,000","2,50,000","60,000","6,85,000"],
+  ["Less: Profit (15% / 10% / 5% of sales)","(56,250)","(25,000)","(3,000)","(84,250)"],
+  ["Less: Selling expenses (5% of sales)","(18,750)","(12,500)","(3,000)","(34,250)"],
+  {"cls":"sub","cells":["<b>Total cost</b>","<b>3,00,000</b>","<b>2,12,500</b>","<b>54,000</b>",
+                        "<b>5,66,500</b>"]},
+  ["Less: Expenses after separation","(1,60,000)","(75,000)","(10,000)","(2,45,000)"],
+  {"cls":"tot","cells":["<b>Notional share of joint cost</b>","<b>1,40,000</b>","<b>1,37,500</b>",
+                        "<b>44,000</b>","<b>3,21,500</b>"]}], headcls="lite")}
+
+<h4 class="mini">W2 &nbsp;Reconciling with the actual joint cost</h4>
+{calc(['Notional shares total &nbsp;=&nbsp; <b>3,21,500</b>',
+       'Actual joint expenditure &nbsp;=&nbsp; <b>3,50,000</b>',
+       f'Shortfall &nbsp;=&nbsp; <b>{R}28,500</b> &mdash; the joint process cost more than the '
+       'estimated profits allow for, so the actual profits will be <i>lower</i> than estimated.'])}
+{table(None, [("Product",""),("Notional share","r"),("Working","r"),("Apportioned joint cost","r")],
+ [["Caustic soda","1,40,000","3,50,000 &times; 1,40,000 / 3,21,500","<b>1,52,410.58</b>"],
+  ["Chlorine","1,37,500","3,50,000 &times; 1,37,500 / 3,21,500","<b>1,49,688.96</b>"],
+  ["Hydrogen","44,000","3,50,000 &times; 44,000 / 3,21,500","<b>47,900.46</b>"],
+  {"cls":"tot","cells":["<b>Total</b>","<b>3,21,500</b>","","<b>3,50,000.00</b>"]}],
+ headcls="lite")}"""
+
+    stmt = reverse_cost("Columnar Statement of Apportionment and Profitability",
+        ["Caustic soda", "Chlorine", "Hydrogen", "Total"],
+        [("Apportioned joint cost &nbsp;<span class='src' style='display:inline'>(W2)</span>",
+          ["1,52,410.58", "1,49,688.96", "47,900.46", "3,50,000"]),
+         ("Expenses after separation", ["1,60,000", "75,000", "10,000", "2,45,000"]),
+         ("Selling expenses (5% of sales)", ["18,750", "12,500", "3,000", "34,250"]),
+         ("<b>Total cost</b>", ["<b>3,31,160.58</b>", "<b>2,37,188.96</b>", "<b>60,900.46</b>",
+                                "<b>6,29,250</b>"], "tot"),
+         ("Sales realisation", ["3,75,000", "2,50,000", "60,000", "6,85,000"]),
+         ("<b>Actual profit / (loss)</b>", ["<b>43,839.42</b>", "<b>12,811.04</b>",
+                                            "<b>(900.46)</b>", "<b>55,750</b>"], "tot"),
+         ("Actual profit as % of sales", ["11.69%", "5.12%", "(1.50%)", "8.14%"], "sub"),
+         ("Estimated profit % (question)", ["15%", "10%", "5%", "&mdash;"], "sub")])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q13", "Three joint products, full ladder",
+                        "Joint &amp; by-product &middot; p.12")
+            + question(q) + read(rd) + method(mt) + wn(wnh) + stmt
+            + why(f"""<p>Look at the hydrogen column: an actual <b>loss</b> of
+<span class="rs">{R}</span>900.46 against an estimated 5% profit. That is a real finding, not an
+error &mdash; the joint process cost {R}28,500 more than the estimates assumed, and hydrogen, having
+the smallest sales, cannot carry its share. Write that sentence in your answer. It shows you can
+read a statement instead of only filling it in.</p>""")
+            + ans([("Apportioned joint cost &mdash; Caustic soda", f"{R} 1,52,410.58"),
+                   ("Apportioned joint cost &mdash; Chlorine", f"{R} 1,49,688.96"),
+                   ("Apportioned joint cost &mdash; Hydrogen", f"{R} 47,900.46"),
+                   ("Total actual profit", f"{R} 55,750"),
+                   ("Notional shares (ratio basis)", "1,40,000 : 1,37,500 : 44,000")],
+                  "State clearly that the notional shares totalled "
+                  f"<span class='rs'>{R}</span>3,21,500 against actual joint cost of "
+                  f"<span class='rs'>{R}</span>3,50,000, and that you apportioned the actual "
+                  "figure in that ratio.")
+            + "</div>")
+
+
+
+# ======================================================================
+# PROBLEM 14
+# ======================================================================
+def q14():
+    q = f"""<p>A by-product &lsquo;Beta&rsquo; is derived in the course of manufacturing product
+&lsquo;Alpha&rsquo;. The by-product is further processed for sale. From the following data
+available from the records, prepare an account showing the cost per kg of the product
+&lsquo;Alpha&rsquo; and the by-product &lsquo;Beta&rsquo;.</p>
+{table(None, [("Particulars",""),("Joint expenses","r"),("Separate &mdash; Alpha","r"),
+              ("Separate &mdash; Beta","r")],
+ [["Materials","10,000","6,000","500"],
+  ["Labour","7,000","5,000","2,000"],
+  ["Overheads","2,500","1,500","600"],
+  {"cls":"tot","cells":["<b>Total</b>","<b>19,500</b>","<b>12,500</b>","<b>3,100</b>"]}],
+ headcls="lite")}
+<p>The quantities produced during the period under consideration were: Alpha &mdash; 1,000 kgs and
+Beta &mdash; 500 kgs. The selling price was <span class="rs">{R}</span>120/kg on which the profit
+earned was 30%.</p>"""
+
+    rd = f"""{bullets([
+ 'A <b>by-product</b> problem: Alpha is the main product, Beta is incidental. The normal '
+ 'treatment is to work out Beta&rsquo;s share of the joint cost by reverse cost and leave the '
+ 'balance for Alpha.',
+ 'Total cost available to share out = joint 19,500 + Alpha&rsquo;s own 12,500 + Beta&rsquo;s own '
+ f'3,100 = <b><span class="rs">{R}</span>35,100</b>. Keep that number in your head &mdash; it is '
+ 'the ceiling on every cost figure in this problem.',
+ '<b>Now look at the selling price.</b> 500 kg of Beta at 120 would be 60,000 of sales, and '
+ '1,000 kg of Alpha at 120 would be 1,20,000. Either one is far bigger than the total cost of '
+ '35,100. So the reverse-cost ladder is going to break. Read W2 before you attempt this in the '
+ 'exam.'])}"""
+
+    mt = steps([
+        "Identify the main product and the by-product.",
+        "Apply the reverse-cost ladder to the <b>by-product</b>: Sales &minus; profit &minus; its "
+        "own separate expenses = its share of the joint cost.",
+        "Joint cost less the by-product's share = the main product's share.",
+        "Main product cost = its joint share + its own separate expenses. "
+        "Divide by its kg for cost per kg. Same for the by-product.",
+        "<b>Always sanity-check</b> that no share is negative and that the shares add back to the "
+        "joint cost. If they do not, the data is faulty &mdash; see W2."])
+
+    wnh = f"""<h4 class="mini">W1 &nbsp;The reverse-cost attempt (taking &#8377;120/kg as Beta&rsquo;s price)</h4>
+{calc(['Beta sales &nbsp;=&nbsp; 500 kg &times; 120 &nbsp;=&nbsp; 60,000',
+       'Less: Profit &nbsp; 30% of 60,000 &nbsp;=&nbsp; (18,000)',
+       '<b>Total cost of Beta &nbsp;=&nbsp; 42,000</b>',
+       'Less: Beta&rsquo;s separate expenses &nbsp;=&nbsp; (3,100)',
+       f'Beta&rsquo;s share of joint cost &nbsp;=&nbsp; <b>38,900</b>',
+       f'But the whole joint cost is only <b>19,500</b> &nbsp;&rarr;&nbsp; '
+       f'Alpha&rsquo;s share would be <b>19,500 &minus; 38,900 = ({R}19,400)</b>, a negative cost.'])}
+
+<div class="blk trap"><span class="lab">W2 &nbsp; The data as printed cannot be solved &mdash; and what to do about it</span>
+<p>A cost can never be negative. Whichever product you assign the
+<span class="rs">{R}</span>120/kg to, the sales value dwarfs the total cost of
+<span class="rs">{R}</span>35,100, so the ladder produces an impossible share. Check the figures
+against the original in your workbook &mdash; most likely the selling price, the profit percentage
+or the joint expenses has a typographical error.</p>
+<p><b>In the exam, do this:</b> write one line stating the inconsistency, then solve the problem on
+the next most defensible basis and say which basis you used. You will be given credit for the
+method. The standard fallback for a by-product whose selling price is unusable is to apportion the
+joint cost on <b>physical quantity</b>, which is shown in W3.</p></div>
+
+<h4 class="mini">W3 &nbsp;Workable solution &mdash; joint cost apportioned on physical quantity</h4>
+{calc(['Quantities &nbsp; Alpha 1,000 kg : Beta 500 kg &nbsp;=&nbsp; <b>2 : 1</b>',
+       f'Alpha&rsquo;s share &nbsp;=&nbsp; 19,500 &times; 2/3 &nbsp;=&nbsp; <b>{R}13,000</b>',
+       f'Beta&rsquo;s share &nbsp;=&nbsp; 19,500 &times; 1/3 &nbsp;=&nbsp; <b>{R}6,500</b>'])}
+{table(None, [("Particulars",""),("Alpha","r"),("Beta","r"),("Total","r")],
+ [["Share of joint cost (2 : 1)","13,000","6,500","19,500"],
+  ["Add: Separate expenses","12,500","3,100","15,600"],
+  {"cls":"tot","cells":["<b>Total cost</b>","<b>25,500</b>","<b>9,600</b>","<b>35,100</b>"]},
+  ["Quantity produced (kg)","1,000","500","1,500"],
+  {"cls":"sub","cells":["<b>Cost per kg</b>","<b>25.50</b>","<b>19.20</b>","&mdash;"]}],
+ headcls="lite")}"""
+
+    al = acct("Alpha Account (main product)",
+      [("To Share of joint cost" + src("W3: 19,500 &times; 2/3"), 1000, 13.00, 13000),
+       ("To Separate materials", "", "", 6000),
+       ("To Separate labour", "", "", 5000),
+       ("To Separate overheads", "", "", 1500),
+       ("TOT", 1000, "", 25500)],
+      [("By Cost of production transferred" + src("25,500 &divide; 1,000 kg"), 1000, 25.50, 25500),
+       None, None, None,
+       ("TOT", 1000, "", 25500)])
+
+    bt = acct("Beta Account (by-product)",
+      [("To Share of joint cost" + src("W3: 19,500 &times; 1/3"), 500, 13.00, 6500),
+       ("To Separate materials", "", "", 500),
+       ("To Separate labour", "", "", 2000),
+       ("To Separate overheads", "", "", 600),
+       ("TOT", 500, "", 9600)],
+      [("By Cost of production transferred" + src("9,600 &divide; 500 kg"), 500, 19.20, 9600),
+       None, None, None,
+       ("TOT", 500, "", 9600)])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q14", "Faulty data &mdash; and how to handle it",
+                        "Joint &amp; by-product &middot; p.12")
+            + question(q) + read(rd) + method(mt) + wn(wnh) + al + bt
+            + ans([("Alpha &mdash; total cost", f"{R} 25,500"),
+                   ("Alpha &mdash; cost per kg", f"{R} 25.50"),
+                   ("Beta &mdash; total cost", f"{R} 9,600"),
+                   ("Beta &mdash; cost per kg", f"{R} 19.20"),
+                   ("Basis used", "Physical quantity 2 : 1 (see W2 for why)")],
+                  f"<b>Ask your professor about this one.</b> If he wants the reverse-cost method, "
+                  f"the corrected selling price is needed. Show W1, W2 and W3 exactly as laid out "
+                  f"above and you will not lose method marks either way.")
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 15
+# ======================================================================
+def q15():
+    q = f"""<p>A product passes through two processes X and Y. The output of Process X is charged
+to Process Y at a price which includes profit of <b>20% on actual cost</b> and the output of
+Process Y is charged to Finished Stock A/c at a price which includes <b>10% profit on actual
+cost</b>. The following data is provided for the month of July.</p>
+{table(None, [("Particulars",""),("X","r"),("Y","r")],
+ [["Material (2,500 units)","1,250","&mdash;"],["Labour","625","500"],
+  ["Overheads","1,875","750"],["Indirect material","&mdash;","1,250"]], headcls="lite")}
+<p>There was no partly finished WIP. Out of the finished stock, 1,500 units had been sold for
+<span class="rs">{R}</span>7,500. Prepare the Process A/c and Finished Stock A/c.</p>"""
+
+    rd = f"""{bullets([
+ 'This is the <b>inter-process profit</b> topic. Each process sells to the next at a mark-up, so '
+ 'the transfer price is bigger than the true cost.',
+ '<b>&ldquo;20% on actual cost&rdquo;</b> &mdash; profit is 20% of cost, so if cost is 3,750 the '
+ 'profit is 750. (Contrast Q16, where profit is a % of the transfer <i>price</i> &mdash; a '
+ 'different calculation.)',
+ 'There is <b>no WIP inside the processes</b>, which makes this the easy version. The only stock '
+ 'is in Finished Stock: 2,500 units produced, 1,500 sold, so <b>1,000 units left</b>.',
+ 'That closing stock of 1,000 units carries profit added by X and by Y which the company has not '
+ 'actually earned yet, because the goods are still on the shelf. That is the '
+ '<b>unrealised profit</b>, and a reserve must be created for it.'])}"""
+
+    mt = steps([
+        "Total Process X's own costs. That is its <b>actual cost</b>.",
+        "Add the stated profit percentage <b>of that cost</b>. The sum is the transfer price to Y.",
+        "Debit Process Y with the transfer price (not the cost), add Y's own costs, total to get "
+        "Y's actual cost.",
+        "Add Y's profit percentage of that total. The sum transfers to Finished Stock.",
+        "In Finished Stock, work out the per-unit transfer value, split it between units sold and "
+        "units in hand, and compute the profit on sale.",
+        "<b>Unrealised profit</b> = total profit loaded by the processes &times; "
+        + frac("closing stock units", "total units produced") + ". Create the reserve for it."])
+
+    wnh = f"""<h4 class="mini">W1 &nbsp;Process X</h4>
+{calc(['Material 1,250 + Labour 625 + Overheads 1,875',
+       f'<b>Actual cost &nbsp;=&nbsp; {R}3,750</b>',
+       f'Profit &nbsp; 20% of 3,750 &nbsp;=&nbsp; <b>{R}750</b>',
+       f'<b>Transfer price to Process Y &nbsp;=&nbsp; {R}4,500</b>'])}
+
+<h4 class="mini">W2 &nbsp;Process Y</h4>
+{calc(['Transfer from X 4,500 + Indirect material 1,250 + Labour 500 + Overheads 750',
+       f'<b>Actual cost &nbsp;=&nbsp; {R}7,000</b>',
+       f'Profit &nbsp; 10% of 7,000 &nbsp;=&nbsp; <b>{R}700</b>',
+       f'<b>Transfer to Finished Stock &nbsp;=&nbsp; {R}7,700</b> &nbsp;for 2,500 units'])}
+
+<h4 class="mini">W3 &nbsp;Finished Stock</h4>
+{calc([f'Value per unit &nbsp;=&nbsp; 7,700 &divide; 2,500 &nbsp;=&nbsp; <b>{R}3.08</b>',
+       f'Cost of 1,500 units sold &nbsp;=&nbsp; 1,500 &times; 3.08 &nbsp;=&nbsp; <b>{R}4,620</b>',
+       f'Closing stock 1,000 units &nbsp;=&nbsp; 1,000 &times; 3.08 &nbsp;=&nbsp; <b>{R}3,080</b>',
+       f'Profit on sale &nbsp;=&nbsp; 7,500 &minus; 4,620 &nbsp;=&nbsp; <b>{R}2,880</b>'])}
+
+<h4 class="mini">W4 &nbsp;Reserve for unrealised profit &mdash; the marks everyone drops</h4>
+{calc([f'Profit loaded by the processes &nbsp;=&nbsp; 750 (X) + 700 (Y) &nbsp;=&nbsp; <b>{R}1,450</b>',
+       'True cost of the 2,500 units &nbsp;=&nbsp; 7,700 &minus; 1,450 &nbsp;=&nbsp; 6,250 '
+       '&nbsp;<i>(check: 3,750 + 1,250 + 500 + 750 = 6,250 &#10003;)</i>',
+       'Closing stock is 1,000 of 2,500 units &nbsp;=&nbsp; <b>40%</b>'])}
+{fml("Reserve &nbsp;=&nbsp; " + frac("1,000 units", "2,500 units")
+     + f" &times; {R}1,450 &nbsp;=&nbsp; <b>{R}580</b>",
+     "Equivalently 3,080 &times; 1,450 / 7,700 = 580. Both routes give the same figure.")}"""
+
+    px = acct("Process X Account",
+      [("To Material", 2500, "", 1250),
+       ("To Labour", "", "", 625),
+       ("To Overheads", "", "", 1875),
+       ("<i>Actual cost</i>", "", "", 3750),
+       ("To Profit &mdash; 20% on cost" + src("W1: 20% of 3,750"), "", "", 750),
+       ("TOT", 2500, "", 4500)],
+      [("By Transfer to Process Y" + src("W1: cost 3,750 + profit 750"), 2500, 1.80, 4500),
+       None, None, None, None,
+       ("TOT", 2500, "", 4500)])
+
+    py = acct("Process Y Account",
+      [("To Transfer from Process X", 2500, 1.80, 4500),
+       ("To Indirect material", "", "", 1250),
+       ("To Labour", "", "", 500),
+       ("To Overheads", "", "", 750),
+       ("<i>Actual cost</i>", "", "", 7000),
+       ("To Profit &mdash; 10% on cost" + src("W2: 10% of 7,000"), "", "", 700),
+       ("TOT", 2500, "", 7700)],
+      [("By Transfer to Finished Stock" + src("W2: cost 7,000 + profit 700"), 2500, 3.08, 7700),
+       None, None, None, None, None,
+       ("TOT", 2500, "", 7700)])
+
+    fs = acct("Finished Stock Account",
+      [("To Transfer from Process Y", 2500, 3.08, 7700),
+       ("To Profit &amp; Loss A/c (profit on sale)" + src("W3: 7,500 &minus; 4,620"),
+        "", "", 2880),
+       ("TOT", 2500, "", 10580)],
+      [("By Sales", 1500, 5.00, 7500),
+       ("By Closing stock" + src("W3: 1,000 &times; " + R + "3.08"), 1000, 3.08, 3080),
+       ("TOT", 2500, "", 10580)])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q15", "Profit as % of cost, plus unrealised profit",
+                        "Inter-process profit &middot; p.12&ndash;13")
+            + question(q) + read(rd) + method(mt) + wn(wnh) + px + py + fs
+            + trap(bullets([
+                '<b>Confusing &ldquo;20% on cost&rdquo; with &ldquo;20% on transfer price&rdquo;.</b> '
+                'On cost: profit = 0.20 &times; cost. On transfer price: profit = 0.20 &times; TP, '
+                'which means profit = 0.25 &times; cost. Q16 uses the second form &mdash; compare '
+                'the two side by side once and you will never mix them again.',
+                'Forgetting the reserve for unrealised profit entirely. It is a separate, named '
+                'figure and questions ask for it explicitly.',
+                'Charging Process Y with X&rsquo;s <i>cost</i> of 3,750. Y is charged the '
+                '<i>transfer price</i> of 4,500 &mdash; that is the whole point of the topic.']))
+            + ans([("Process X &mdash; actual cost / transfer price",
+                    f"{R} 3,750 &nbsp;/&nbsp; {R} 4,500"),
+                   ("Process Y &mdash; actual cost / transfer price",
+                    f"{R} 7,000 &nbsp;/&nbsp; {R} 7,700"),
+                   ("Profit on sale of 1,500 units", f"{R} 2,880"),
+                   ("Closing stock (1,000 units)", f"{R} 3,080"),
+                   ("<b>Reserve for unrealised profit</b>", f"<b>{R} 580</b>"),
+                   ("Total profit shown (750 + 700 + 2,880)", f"{R} 4,330"),
+                   ("Real profit after the reserve", f"{R} 3,750")])
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 16
+# ======================================================================
+def q16():
+    q = f"""<p>A product passes through three processes to completion, known as A, B and C. The
+output of each process is charged to the next process at a price calculated to give a profit of
+<b>20% on the transfer price</b>. The output of Process C is charged to finished stock on a
+similar basis. There was no partly finished WIP in any process on December 31st, on which day the
+following information was obtained.</p>
+{table(None, [("Particulars",""),("Process A","r"),("Process B","r"),("Process C","r")],
+ [["Materials","4,000","6,000","2,000"],["Labour","6,000","4,000","8,000"],
+  ["Stock: 31st Dec","2,000","4,000","6,000"]], headcls="lite")}
+<p>There was no stock in hand on Jan 1st and overheads were ignored. Of the goods passed into
+finished stock, <span class="rs">{R}</span>4,000 remained in hand on Dec 31st and the balance has
+been sold for <span class="rs">{R}</span>36,000. Show the Process A/c and calculate reserve for
+unrealised profits.</p>"""
+
+    rd = f"""{bullets([
+ '<b>&ldquo;20% on the transfer price&rdquo;</b> &mdash; not on cost. So if the transfer price is '
+ '10,000 the profit is 2,000 and the cost is 8,000. Working backwards: '
+ 'Transfer price = Cost &divide; 0.80.',
+ '<b>Every process has closing stock this time.</b> That stock is deducted <i>before</i> you load '
+ 'the profit, because you only charge profit on what actually leaves.',
+ 'Because stock sits in B and C, and those stocks contain profit passed on from earlier '
+ 'processes, you must track <b>cost and profit in separate columns</b>. This is the '
+ '<b>three-column format</b> &mdash; Cost | Profit | Total. Use it and this problem is '
+ 'straightforward; try to do it in one column and you will not be able to find the reserve.',
+ 'Process A&rsquo;s own stock contains <b>no</b> profit &mdash; nothing has been marked up into it '
+ 'yet. Only B, C and Finished Stock hold unrealised profit.'])}"""
+
+    mt = steps([
+        "Draw three columns for every process: <b>Cost</b>, <b>Profit</b>, <b>Total</b>.",
+        "Enter the transfer-in split into its cost and profit parts, then the process's own costs "
+        "(all in the Cost column &mdash; own costs carry no profit).",
+        "Total the three columns.",
+        "Deduct closing stock. Split it in the <b>same cost : profit ratio as the total debit</b>: "
+        "stock cost part = stock &times; " + frac("total cost", "total debit") + ".",
+        "What remains is the cost of goods transferred. "
+        "Transfer price = that cost &divide; 0.80; the difference is the profit for this process.",
+        "Repeat for the next process. In Finished Stock do the same split for the goods in hand.",
+        "<b>Reserve = the Profit column of every closing stock added together.</b>",
+        "Cross-check: total apparent profit &minus; reserve = the realised profit from Finished "
+        "Stock."])
+
+    wnh = f"""<h4 class="mini">W1 &nbsp;Turning &ldquo;20% on transfer price&rdquo; into arithmetic</h4>
+{fml("Transfer price &nbsp;=&nbsp; " + frac("Cost of goods transferred", "0.80")
+     + " &nbsp;&nbsp;&nbsp; and &nbsp;&nbsp;&nbsp; Profit &nbsp;=&nbsp; 20% of that price",
+     "Because Cost = 80% of the transfer price. Note this is the same as 25% on cost &mdash; "
+     "but always work from the price, as the question states it.")}
+
+<h4 class="mini">W2 &nbsp;Splitting each closing stock into cost and profit</h4>
+{table(None, [("Process",""),("Total debit","r"),("of which Cost","r"),("Closing stock","r"),
+              ("Stock &mdash; cost part","r"),("Stock &mdash; profit part","r")],
+ [["A","10,000","10,000","2,000","2,000","<b>Nil</b>"],
+  ["B","20,000","18,000","4,000","4,000 &times; 18/20 = 3,600","<b>400</b>"],
+  ["C","30,000","24,400","6,000","6,000 &times; 24,400/30,000 = 4,880","<b>1,120</b>"],
+  ["Finished Stock","30,000","19,520","4,000","4,000 &times; 19,520/30,000 = 2,602.67",
+   "<b>1,397.33</b>"],
+  {"cls":"tot","cells":["<b>Total reserve</b>","","","","","<b>2,917.33</b>"]}], headcls="lite")}"""
+
+    def tri(caption, rows):
+        head = [("Particulars",""),("Cost " + R,"r"),("Profit " + R,"r"),("Total " + R,"r")]
+        body=[]
+        for r in rows:
+            cls = r[4] if len(r)>4 else ""
+            body.append({"cls":cls,"cells":[r[0],(r[1],"r"),(r[2],"r"),(r[3],"r")]})
+        return table(caption, head, body)
+
+    ta = tri("Process A Account", [
+      ("To Materials","4,000","&mdash;","4,000"),
+      ("To Labour","6,000","&mdash;","6,000"),
+      ("<b>Total debit</b>","<b>10,000</b>","<b>&mdash;</b>","<b>10,000</b>","tot"),
+      ("Less: Closing stock","(2,000)","&mdash;","(2,000)"),
+      ("<b>Cost of goods transferred</b>","<b>8,000</b>","<b>&mdash;</b>","<b>8,000</b>","sub"),
+      ("Add: Profit &mdash; 20% on transfer price &nbsp;<span class='src' style='display:inline'>"
+       "8,000 &divide; 0.80 = 10,000; profit 2,000</span>","&mdash;","2,000","2,000"),
+      ("<b>Transferred to Process B</b>","<b>8,000</b>","<b>2,000</b>","<b>10,000</b>","tot")])
+
+    tb = tri("Process B Account", [
+      ("To Transfer from Process A","8,000","2,000","10,000"),
+      ("To Materials","6,000","&mdash;","6,000"),
+      ("To Labour","4,000","&mdash;","4,000"),
+      ("<b>Total debit</b>","<b>18,000</b>","<b>2,000</b>","<b>20,000</b>","tot"),
+      ("Less: Closing stock &nbsp;<span class='src' style='display:inline'>W2: 4,000 split "
+       "18/20</span>","(3,600)","(400)","(4,000)"),
+      ("<b>Cost of goods transferred</b>","<b>14,400</b>","<b>1,600</b>","<b>16,000</b>","sub"),
+      ("Add: Profit &nbsp;<span class='src' style='display:inline'>16,000 &divide; 0.80 = 20,000; "
+       "profit 4,000</span>","&mdash;","4,000","4,000"),
+      ("<b>Transferred to Process C</b>","<b>14,400</b>","<b>5,600</b>","<b>20,000</b>","tot")])
+
+    tc = tri("Process C Account", [
+      ("To Transfer from Process B","14,400","5,600","20,000"),
+      ("To Materials","2,000","&mdash;","2,000"),
+      ("To Labour","8,000","&mdash;","8,000"),
+      ("<b>Total debit</b>","<b>24,400</b>","<b>5,600</b>","<b>30,000</b>","tot"),
+      ("Less: Closing stock &nbsp;<span class='src' style='display:inline'>W2: 6,000 split "
+       "24,400/30,000</span>","(4,880)","(1,120)","(6,000)"),
+      ("<b>Cost of goods transferred</b>","<b>19,520</b>","<b>4,480</b>","<b>24,000</b>","sub"),
+      ("Add: Profit &nbsp;<span class='src' style='display:inline'>24,000 &divide; 0.80 = 30,000; "
+       "profit 6,000</span>","&mdash;","6,000","6,000"),
+      ("<b>Transferred to Finished Stock</b>","<b>19,520</b>","<b>10,480</b>","<b>30,000</b>","tot")])
+
+    tf = tri("Finished Stock Account", [
+      ("To Transfer from Process C","19,520","10,480","30,000"),
+      ("Less: Closing stock in hand &nbsp;<span class='src' style='display:inline'>W2: 4,000 split "
+       "19,520/30,000</span>","(2,602.67)","(1,397.33)","(4,000)"),
+      ("<b>Cost of sales</b>","<b>16,917.33</b>","<b>9,082.67</b>","<b>26,000</b>","sub"),
+      ("Sales","&mdash;","&mdash;","36,000"),
+      ("<b>Profit on sale</b> &nbsp;<span class='src' style='display:inline'>36,000 &minus; 26,000"
+       "</span>","&mdash;","10,000","10,000"),
+      ("<b>Total profit realised</b>","&mdash;","<b>19,082.67</b>","&mdash;","tot")])
+
+    recon = table("Reconciliation &mdash; proof that the reserve is right",
+      [("Particulars",""),("Amount " + R,"r")],
+      [["Profit shown by Process A","2,000"],["Profit shown by Process B","4,000"],
+       ["Profit shown by Process C","6,000"],["Profit on sale in Finished Stock","10,000"],
+       {"cls":"tot","cells":["<b>Total apparent profit</b>","<b>22,000.00</b>"]},
+       ["Less: Reserve for unrealised profit (W2)","(2,917.33)"],
+       {"cls":"tot","cells":["<b>Actual (realised) profit</b>","<b>19,082.67</b>"]},
+       {"cls":"sub","cells":["Agrees with the Finished Stock A/c profit column &#10003;",
+                             "19,082.67"]}], headcls="lite")
+
+    return ("<div class='prob long'>"
+            + prob_head("Q16", "Three-column format and the profit reserve",
+                        "Inter-process profit &middot; p.13")
+            + question(q) + read(rd) + method(mt) + wn(wnh)
+            + ta + tb + tc + tf + recon
+            + why("<p>The reserve exists because the company has already recorded "
+                  f"<span class='rs'>{R}</span>22,000 of profit, but "
+                  f"<span class='rs'>{R}</span>2,917.33 of that is sitting inside goods it still "
+                  "owns. You cannot count profit on goods you have not sold. Removing the reserve "
+                  "brings the books back to the profit actually earned &mdash; and the fact that it "
+                  "reconciles to the paisa is your proof the whole answer is right.</p>")
+            + ans([("Process A &mdash; profit / transfer price", f"{R} 2,000 / {R} 10,000"),
+                   ("Process B &mdash; profit / transfer price", f"{R} 4,000 / {R} 20,000"),
+                   ("Process C &mdash; profit / transfer price", f"{R} 6,000 / {R} 30,000"),
+                   ("Profit on sale", f"{R} 10,000"),
+                   ("Total apparent profit", f"{R} 22,000"),
+                   ("<b>Reserve for unrealised profit</b>", f"<b>{R} 2,917.33</b>"),
+                   ("Actual realised profit", f"{R} 19,082.67")],
+                  "Reserve built up as: A nil + B 400 + C 1,120 + Finished Stock 1,397.33 = "
+                  f"<span class='rs'>{R}</span>2,917.33.")
+            + "</div>")
