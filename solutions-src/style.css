@@ -1,0 +1,247 @@
+/* ============================================================
+   COST MANAGEMENT - I  :  Master Solutions Book
+   Print stylesheet (WeasyPrint / A4)
+   ============================================================ */
+
+@page {
+  size: A4;
+  margin: 15mm 12mm 16mm 12mm;
+  @bottom-center {
+    content: counter(page);
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 8pt; color: #8a8a8a;
+  }
+}
+@page cover { margin: 0; @bottom-center { content: none; } }
+
+/* ---------- named page for module openers ---------- */
+@page modopen { margin: 0 0 16mm 0; }
+
+html { -weasy-hyphens: none; }
+
+body {
+  font-family: "DejaVu Serif", "DejaVu Sans", "Noto Sans", serif;
+  font-size: 9.4pt;
+  line-height: 1.42;
+  color: #1c1c1c;
+  margin: 0; padding: 0;
+}
+
+/* symbols / numbers always from a font that has them */
+.sym, .num, .rs { font-family: "DejaVu Sans", sans-serif; }
+
+/* ============================ COVER ============================ */
+.cover { page: cover; height: 297mm; position: relative; }
+.cover-band {
+  background: #10314f; color: #fff;
+  padding: 34mm 20mm 16mm 20mm;
+}
+.cover-kicker {
+  font-family: "DejaVu Sans", sans-serif; font-size: 9pt;
+  letter-spacing: 3.5pt; text-transform: uppercase; color: #9fc0dd;
+}
+.cover-title {
+  font-size: 34pt; font-weight: bold; line-height: 1.1; margin: 7mm 0 3mm 0;
+}
+.cover-sub { font-size: 13pt; color: #d6e6f4; }
+.cover-body { padding: 12mm 20mm; }
+.cover-note {
+  font-size: 9.6pt; color: #333; border-left: 2.6pt solid #10314f;
+  padding-left: 5mm; margin: 6mm 0;
+}
+.chip {
+  display: inline-block; border: 0.8pt solid #10314f; border-radius: 10pt;
+  padding: 1.6mm 3.4mm; margin: 1.1mm 1.6mm 1.1mm 0;
+  font-family: "DejaVu Sans", sans-serif; font-size: 8.4pt; color: #10314f;
+}
+
+/* ======================= MODULE OPENER ======================= */
+.modopen { page: modopen; page-break-before: always; }
+.modopen-band { background: #10314f; color: #fff; padding: 30mm 18mm 14mm 18mm; }
+.modopen-kicker {
+  font-family: "DejaVu Sans", sans-serif; font-size: 8.6pt;
+  letter-spacing: 3pt; text-transform: uppercase; color: #9fc0dd;
+}
+.modopen-title { font-size: 25pt; font-weight: bold; margin: 5mm 0 3mm 0; line-height:1.12; }
+.modopen-count {
+  display:inline-block; border:0.8pt solid #7ea6c9; border-radius:10pt;
+  padding:1.4mm 3.4mm; font-family:"DejaVu Sans",sans-serif; font-size:8.6pt; color:#d6e6f4;
+}
+.modopen-body { padding: 10mm 18mm 0 18mm; }
+
+/* ========================= HEADINGS ========================= */
+h1, h2, h3, h4 { font-family: "DejaVu Serif", serif; color: #10314f; }
+h2.sec, h3.sub, h4.mini { page-break-after: avoid; }
+h2.sec {
+  font-size: 14pt; margin: 0 0 4mm 0; padding-bottom: 1.6mm;
+  border-bottom: 1.6pt solid #10314f;
+}
+h3.sub {
+  font-size: 11.2pt; margin: 6mm 0 2.6mm 0; color: #14456e;
+}
+h4.mini {
+  font-size: 9.8pt; margin: 4mm 0 1.8mm 0; color: #14456e;
+  font-family: "DejaVu Sans", sans-serif;
+}
+
+/* stacked fraction */
+.fr { display: inline-block; text-align: center; vertical-align: middle; margin: 0 1.4mm; }
+.fr .fr-n { display: block; padding: 0 2mm 0.5mm 2mm; }
+.fr .fr-d { display: block; padding: 0.5mm 2mm 0 2mm; }
+
+/* ==================== PROBLEM CONTAINER ==================== */
+.prob { page-break-inside: avoid; margin: 0 0 8mm 0; }
+.prob.long { page-break-inside: auto; }
+
+.prob-head {
+  background: #10314f; color: #fff; padding: 2.2mm 3.4mm;
+  font-family: "DejaVu Sans", sans-serif;
+  display: flex; justify-content: space-between;
+}
+.prob-no { font-size: 10.4pt; font-weight: bold; }
+.prob-tag { font-size: 7.6pt; color: #b9d3e8; white-space: nowrap; padding-left: 4mm; }
+.prob-head { page-break-after: avoid; }
+.q { page-break-inside: avoid; }
+
+/* the question, verbatim */
+.q {
+  border: 0.7pt solid #b9b9b9; border-top: none;
+  background: #f6f6f4; padding: 2.6mm 3.4mm; font-size: 9pt;
+}
+.q .qlab {
+  font-family: "DejaVu Sans", sans-serif; font-size: 7.6pt;
+  letter-spacing: 1.4pt; text-transform: uppercase; color: #7a7a7a;
+  display: block; margin-bottom: 1.2mm;
+}
+
+/* ---------- the four teaching blocks ---------- */
+.blk { padding: 2.6mm 3.4mm; margin: 2.4mm 0; font-size: 9pt; }
+.blk .lab {
+  font-family: "DejaVu Sans", sans-serif; font-size: 7.6pt;
+  letter-spacing: 1.4pt; text-transform: uppercase;
+  display: block; margin-bottom: 1.4mm; font-weight: bold;
+}
+.blk p { margin: 0 0 1.6mm 0; }
+.blk p:last-child { margin-bottom: 0; }
+
+.read   { background: #fdf6e6; border-left: 2.6pt solid #c8901a; }
+.read   .lab { color: #96690b; }
+.method { background: #eaf5f4; border-left: 2.6pt solid #14837a; }
+.method .lab { color: #0d6058; }
+.trap   { background: #fdeeec; border-left: 2.6pt solid #c0392b; }
+.trap   .lab { color: #98271b; }
+.why    { background: #f1eef8; border-left: 2.6pt solid #5b4a9e; }
+.why    .lab { color: #453579; }
+.wn     { background: #eef7ee; border-left: 2.6pt solid #2c7a34; }
+.wn     .lab { color: #1f5b26; }
+
+/* numbered method steps */
+ol.steps { margin: 0; padding-left: 6.5mm; }
+ol.steps li { margin-bottom: 1.3mm; }
+ol.steps li:last-child { margin-bottom: 0; }
+ul.tight { margin: 0; padding-left: 5mm; }
+ul.tight li { margin-bottom: 1.1mm; }
+
+/* ========================== TABLES ========================== */
+table.t {
+  border-collapse: collapse; width: 100%;
+  font-family: "DejaVu Sans", sans-serif; font-size: 8.4pt;
+  margin: 2.4mm 0;
+}
+table.t caption {
+  caption-side: top; text-align: left;
+  font-family: "DejaVu Serif", serif; font-size: 9.4pt; font-weight: bold;
+  color: #10314f; padding-bottom: 1.4mm;
+}
+table.t th, table.t td {
+  border: 0.5pt solid #9a9a9a; padding: 1.5mm 2mm; vertical-align: top;
+}
+table.t thead th {
+  background: #10314f; color: #fff; font-weight: bold; font-size: 8.2pt;
+}
+table.t thead.lite th { background: #e8eef4; color: #10314f; }
+table.t tbody tr.tot td { background: #eef2f6; font-weight: bold; }
+table.t tbody tr.sub td { background: #f7f9fb; }
+table.t td.r, table.t th.r { text-align: right; }
+table.t td.c, table.t th.c { text-align: center; }
+table.t td.ind { padding-left: 5.5mm; }
+thead { display: table-header-group; }
+
+/* the provenance note that lives inside a cell */
+.src {
+  display: block; font-size: 6.9pt; color: #c0392b;
+  font-family: "DejaVu Sans", sans-serif; line-height: 1.25; margin-top: 0.5mm;
+}
+/* provenance as a dedicated column */
+table.t td.howcol {
+  font-size: 7.4pt; color: #444; background: #fcfaf5; font-style: normal;
+}
+table.t th.howcol { background: #7d6a3f; }
+
+/* ledger / account format */
+table.acct {
+  border-collapse: collapse; width: 100%; font-family:"DejaVu Sans",sans-serif;
+  font-size: 8.3pt; margin: 2.4mm 0;
+  page-break-inside: avoid;          /* keep an account whole */
+}
+table.acct caption {
+  caption-side: top; text-align: center;
+  font-family: "DejaVu Serif", serif; font-size: 9.6pt; font-weight: bold;
+  color: #10314f; padding-bottom: 1.6mm;
+  page-break-after: avoid;           /* never orphan the caption */
+}
+table.acct th, table.acct td { border: 0.5pt solid #9a9a9a; padding: 1.4mm 2mm; vertical-align: top; }
+table.acct thead th { background: #10314f; color:#fff; font-size: 8.1pt; }
+table.acct td.r { text-align: right; }
+table.acct td.c { text-align: center; }
+table.acct tr.tot td { background:#eef2f6; font-weight: bold; }
+table.acct .mid { border-left: 1.4pt solid #10314f; }
+
+/* ===================== FINAL ANSWER BOX ===================== */
+.ans {
+  border: 1.4pt solid #10314f; background: #f4f8fb;
+  padding: 2.6mm 3.4mm; margin: 2.8mm 0 0 0; font-size: 9.2pt;
+}
+.ans .lab {
+  font-family: "DejaVu Sans", sans-serif; font-size: 7.6pt; font-weight: bold;
+  letter-spacing: 1.4pt; text-transform: uppercase; color: #10314f;
+  display: block; margin-bottom: 1.4mm;
+}
+.ans table.mini { border-collapse: collapse; font-family:"DejaVu Sans",sans-serif; font-size: 8.6pt; }
+.ans table.mini td { padding: 0.9mm 3mm 0.9mm 0; border: none; }
+.ans table.mini td.v { font-weight: bold; text-align: right; }
+
+/* ======================== FLOW DIAGRAMS ======================== */
+.dia { margin: 3mm 0; text-align: center; page-break-inside: avoid; }
+.dia svg { max-width: 100%; }
+.dia .cap {
+  font-family: "DejaVu Sans", sans-serif; font-size: 7.6pt; color: #666;
+  margin-top: 1.4mm;
+}
+
+/* formula strip */
+.fml {
+  border: 0.7pt solid #14837a; background: #f2faf9;
+  padding: 2.4mm 3.4mm; margin: 2.4mm 0; text-align: center;
+  font-family: "DejaVu Sans", sans-serif; font-size: 9.2pt; color: #0d4b45;
+}
+.fml .small { font-size: 7.6pt; color: #4a6f6b; display: block; margin-top: 1.2mm; }
+
+/* inline key-value flow: a = b - c */
+.calc {
+  font-family: "DejaVu Sans", sans-serif; font-size: 8.6pt;
+  background: #fafafa; border-left: 2pt solid #bbb;
+  padding: 1.8mm 3mm; margin: 1.8mm 0;
+}
+.calc div { margin-bottom: 0.9mm; }
+.calc div:last-child { margin-bottom: 0; }
+
+/* misc */
+.small { font-size: 8pt; color: #555; }
+.hl { background: #fff2a8; padding: 0 0.7mm; }
+b.k { color: #10314f; }
+.A { color: #c0392b; font-weight: bold; }   /* Adverse */
+.F { color: #1e7a37; font-weight: bold; }   /* Favourable */
+hr.thin { border: none; border-top: 0.5pt solid #ccc; margin: 4mm 0; }
+.pb { page-break-before: always; }
+.nobr { page-break-inside: avoid; }
