@@ -166,6 +166,8 @@ table.t td.r, table.t th.r { text-align: right; }
 table.t td.c, table.t th.c { text-align: center; }
 table.t td.ind { padding-left: 5.5mm; }
 thead { display: table-header-group; }
+/* never let a single row be torn in half by a page break */
+table.t tr, table.acct tr { page-break-inside: avoid; }
 
 /* the provenance note that lives inside a cell */
 .src {
