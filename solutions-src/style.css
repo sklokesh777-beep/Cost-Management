@@ -171,6 +171,10 @@ table.t tbody tr.irr td { background: #fafafa; color: #8a8a8a; }
 table.t tbody tr.irr td:first-child b { text-decoration: line-through; }
 b.yes { color: #1e7a37; }
 b.no  { color: #c0392b; }
+/* variance tags: favourable green, adverse red */
+.vf { color: #1e7a37; font-weight: bold; white-space: nowrap; }
+.va { color: #c0392b; font-weight: bold; white-space: nowrap; }
+table.t tbody tr.recon td { background: #f2f7f2; }
 thead { display: table-header-group; }
 /* never let a single row be torn in half by a page break */
 table.t tr, table.acct tr { page-break-inside: avoid; }

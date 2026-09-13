@@ -26,13 +26,11 @@ def rs(v, dp=0):
         return v
     neg = v < 0
     v = abs(v)
-    if dp:
-        whole = int(v)
-        frac = ("%.*f" % (dp, v - whole))[2:]
-    else:
-        whole = int(round(v))
-        frac = None
-    s = str(whole)
+    # Round to the requested precision FIRST, then split.  Doing it the other
+    # way round lets binary floating-point artefacts leak a wrong integer part:
+    # 182.9999999999999 would split into whole=182 and frac="00" -> "182.00".
+    ip, _, frac = ("%.*f" % (dp, v)).partition(".")
+    s = ip
     if len(s) > 3:
         head, tail = s[:-3], s[-3:]
         parts = []
@@ -42,7 +40,7 @@ def rs(v, dp=0):
         if head:
             parts.insert(0, head)
         s = ",".join(parts + [tail])
-    if frac is not None:
+    if frac:
         s = s + "." + frac
     return ("(" + s + ")") if neg else s
 
@@ -161,7 +159,9 @@ def table(caption, head, rows, cls="t", headcls="", widths=None):
         h += f"<tr class='{rcls}'>"
         for c in cells:
             if isinstance(c, dict):
-                h += f"<td class='{c.get('a','')} {c.get('cls','')}'>{c['t']}</td>"
+                cs = f" colspan='{c['cs']}'" if "cs" in c else ""
+                h += (f"<td class='{c.get('a','')} {c.get('cls','')}'{cs}>"
+                      f"{c['t']}</td>")
             elif isinstance(c, (tuple, list)):
                 h += f"<td class='{c[1]}'>{c[0]}</td>"
             else:
