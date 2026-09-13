@@ -1285,7 +1285,9 @@ it easy is the <b>units reconciliation</b> &mdash; do it first and the whole ans
 def build():
     return (opener() + q1() + q2() + q3() + q4() + q5()
             + q6() + q7() + q8() + q9() + q10() + q11() + q12()
-            + q13() + q14() + q15() + q16())
+            + q13() + q14() + q15() + q16()
+            + eq_playbook() + q17() + q18() + q19() + q20()
+            + q21() + q22() + q23() + q24())
 
 
 
@@ -2102,4 +2104,779 @@ unrealised profits.</p>"""
                    ("Actual realised profit", f"{R} 19,082.67")],
                   "Reserve built up as: A nil + B 400 + C 1,120 + Finished Stock 1,397.33 = "
                   f"<span class='rs'>{R}</span>2,917.33.")
+            + "</div>")
+
+
+
+# ======================================================================
+# EQUIVALENT PRODUCTION  -  shared playbook for Q17 to Q24
+# ======================================================================
+def eq_playbook():
+    return f"""
+<div class="modopen" style="page-break-before:always">
+<div class="modopen-band" style="padding:22mm 18mm 12mm 18mm">
+<div class="modopen-kicker">Module One &middot; Topic 5</div>
+<div class="modopen-title" style="font-size:21pt">Equivalent Production</div>
+<span class="modopen-count">Problems 17 to 24 &nbsp;&middot;&nbsp; workbook pages 13 to 16</span>
+</div>
+<div class="modopen-body">
+
+<div class="blk read"><span class="lab">The single idea behind all eight problems</span>
+<p>Until now every unit was either finished or lost. Now some units are <b>half-finished</b> at the
+end of the month. You cannot divide cost by &ldquo;3,000 finished units + 800 half-finished
+units&rdquo;, because those 800 have not absorbed a full unit&rsquo;s worth of cost.</p>
+<p>So you convert them. <b>800 units that are 70% complete are treated as 560 complete
+units.</b> That converted figure is called an <b>equivalent unit</b>, and once you have it the
+problem collapses back into the ordinary &ldquo;total cost &divide; units&rdquo; you already know.</p>
+<p>The one extra wrinkle: material, labour and overhead are usually at <i>different</i> stages of
+completion. So you do the conversion <b>three times</b> and get <b>three separate rates</b>.</p>
+</div>
+
+{arrow_panel(500, 168, [
+  {"box": (14, 6, 190, 26, "800 units of closing WIP|Material 80% &middot; Labour 70% &middot; OH 70%",
+           "#fdf6e6"), "fs": 7.6},
+  {"box": (252, 6, 234, 26, "Material 640 EU &middot; Labour 560 EU &middot; OH 560 EU",
+           "#eaf5f4"), "fs": 7.6},
+  {"arc": (204, 19, 250, 19, "&times; the %", -14)},
+  {"box": (14, 52, 472, 22,
+           "STEP 1  Statement of EQUIVALENT PRODUCTION   &mdash;  how many equivalent units of each element",
+           "#e8eef4"), "fs": 8.0},
+  {"box": (14, 82, 472, 22,
+           "STEP 2  Statement of COST   &mdash;  cost of each element &divide; its own equivalent units = 3 rates",
+           "#e8eef4"), "fs": 8.0},
+  {"box": (14, 112, 472, 22,
+           "STEP 3  Statement of EVALUATION   &mdash;  value the finished units, the losses and the WIP",
+           "#e8eef4"), "fs": 8.0},
+  {"box": (14, 142, 472, 22,
+           "STEP 4  PROCESS ACCOUNT   &mdash;  it must balance; that is your proof",
+           "#eef7ee"), "fs": 8.0, "stroke": "#2c7a34", "fg": "#1f5b26"},
+  {"line": (250, 74, 250, 80)}, {"line": (250, 104, 250, 110)},
+  {"line": (250, 134, 250, 140)},
+], "Four statements, always in this order, in every one of Q17 to Q24. Never skip one.")}
+
+<h3 class="sub">The rules for the equivalent-production statement</h3>
+{table(None, [("What appears in the output column",""),("Material","c"),("Labour","c"),("Overhead","c"),
+              ("Why","")],
+ [["Units completed &amp; transferred","100%","100%","100%",
+   "They are finished. Full cost in every element."],
+  ["<b>Normal loss</b>","<b>Nil</b>","<b>Nil</b>","<b>Nil</b>",
+   "This is the rule students forget. Normal loss gets <b>zero</b> equivalent units &mdash; its cost is "
+   "absorbed by the good units, so giving it units would double-count."],
+  ["<b>Abnormal loss</b>","its % of completion","its %","its %",
+   "It is a real loss of real cost, so it must carry equivalent units. If the question says the "
+   "scrapped units were 100% complete, use 100%."],
+  ["<b>Abnormal gain</b>","100%","100%","100%",
+   "Always 100%, and it is <b>deducted</b> in the statement, not added."],
+  ["Closing WIP","its stated %","its stated %","its stated %",
+   "The whole reason the topic exists."],
+  ["Opening WIP &mdash; <b>FIFO only</b>","the % still <i>to do</i>","the % to do","the % to do",
+   "Under FIFO the opening WIP was partly done last month, so only the balance belongs to this "
+   "month. 40% complete means 60% to do."]],
+ headcls="lite", widths=["25%","10%","10%","10%","45%"])}
+
+<div class="blk trap"><span class="lab">FIFO versus Average &mdash; the only difference that matters</span>
+{table(None, [("",""),("FIFO method","" ),("Average method","")],
+ [["Opening WIP units in the statement",
+   "Only the <b>unfinished portion</b> (the % still to do)",
+   "Not shown separately &mdash; the opening units are inside the completed figure at <b>100%</b>"],
+  ["Opening WIP <b>cost</b>",
+   "Kept apart. Added back only at the evaluation stage, on top of the cost of finishing it.",
+   "<b>Merged</b> with this month&rsquo;s cost before dividing."],
+  ["Which costs go into the rate",
+   "<b>This month&rsquo;s costs only</b>",
+   "Opening WIP cost <b>+</b> this month&rsquo;s costs"],
+  ["Use it when","The question says FIFO, or gives the opening WIP&rsquo;s degree of completion "
+   "element by element",
+   "The question says average, or gives the opening WIP cost as one lump you cannot split"]],
+ headcls="lite", widths=["22%","39%","39%"])}
+<p style="margin-top:2mm">Q21 and Q22 are FIFO. Q23 is average. <b>Q24 asks for both</b> on the
+same data, which is the best possible way to see the difference &mdash; work it and compare the two
+totals.</p>
+</div>
+</div></div>"""
+
+
+# ---------- helper: equivalent production statement ----------
+def eqstmt(caption, rows, totals, cols=("Material", "Labour", "Overhead")):
+    """rows: (label, units, [(%,EU) per element])  ; totals: [EU per element]"""
+    head = [("Output / Particulars", ""), ("Units", "r")]
+    for c in cols:
+        head += [(f"{c} %", "c"), (f"{c} EU", "r")]
+    body = []
+    for r in rows:
+        cells = [r[0], (r[1], "r")]
+        for pct, eu in r[2]:
+            cells += [(pct, "c"), (eu, "r")]
+        body.append({"cls": r[3] if len(r) > 3 else "", "cells": cells})
+    tcells = ["<b>Total equivalent units</b>", ("", "r")]
+    for t in totals:
+        tcells += [("", "c"), (f"<b>{t}</b>", "r")]
+    body.append({"cls": "tot", "cells": tcells})
+    return table(caption, head, body)
+
+
+def coststmt(caption, rows, total):
+    return table(caption,
+        [("Element", ""), ("Cost " + R, "r"), ("Equivalent units", "r"),
+         ("Cost per unit " + R, "r")],
+        rows + [{"cls": "tot", "cells": ["<b>Total cost per unit</b>", ("", "r"), ("", "r"),
+                                          (f"<b>{total}</b>", "r")]}])
+
+
+def evalstmt(caption, rows, total):
+    return table(caption, [("Particulars", ""), ("Working", ""), ("Amount " + R, "r")],
+        rows + [{"cls": "tot", "cells": ["<b>Total</b>", "", (f"<b>{total}</b>", "r")]}])
+
+
+# ======================================================================
+# PROBLEM 17
+# ======================================================================
+def q17():
+    q = f"""<p>In Process A on March 1st, there was no opening work-in-progress. During the month
+of March, 2,000 units of material was issued at a cost of <span class="rs">{R}</span>18,000.
+Labour and overheads totalled to <span class="rs">{R}</span>9,000 and
+<span class="rs">{R}</span>6,600 respectively. On 31st March 1,500 units were completed and
+transferred to the next process. Of the remaining 500 units which are incomplete, degree of
+completion was: Material 100%, Labour 60% and Overheads 30%.</p>
+<p>Prepare (a) Statement of equivalent production (b) Statement of cost (c) Statement of
+evaluation (d) Process account.</p>"""
+
+    rd = f"""{bullets([
+ '<b>No opening WIP and no losses.</b> The simplest possible version &mdash; the perfect one to '
+ 'learn the four statements on.',
+ 'Units: 2,000 in = 1,500 transferred + 500 closing WIP. Balanced, so nothing is lost.',
+ '<b>Material is 100% complete.</b> That is normal &mdash; material is usually issued in full at '
+ 'the start, so closing WIP has all its material but only part of its labour and overhead.',
+ 'Three different percentages means <b>three different rates</b>. Do not average them into one.'])}"""
+
+    s1 = eqstmt("(a) Statement of Equivalent Production",
+      [("Units completed &amp; transferred", "1,500",
+        [("100", "1,500"), ("100", "1,500"), ("100", "1,500")]),
+       ("Closing work-in-progress", "500",
+        [("100", "500"), ("60", "300"), ("30", "150")])],
+      ["2,000", "1,800", "1,650"])
+
+    s2 = coststmt("(b) Statement of Cost",
+      [["Material", "18,000", "2,000", "<b>9.00</b>"],
+       ["Labour", "9,000", "1,800", "<b>5.00</b>"],
+       ["Overhead", "6,600", "1,650", "<b>4.00</b>"]], "18.00")
+
+    s3 = evalstmt("(c) Statement of Evaluation",
+      [["Units completed &amp; transferred",
+        f"1,500 units &times; {R}18.00", "27,000"],
+       {"cls": "sub", "cells": ["<b>Closing work-in-progress</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;Material", f"500 EU &times; {R}9.00", "4,500"],
+       ["&nbsp;&nbsp;&nbsp;Labour", f"300 EU &times; {R}5.00", "1,500"],
+       ["&nbsp;&nbsp;&nbsp;Overhead", f"150 EU &times; {R}4.00", "600"],
+       {"cls": "sub", "cells": ["&nbsp;&nbsp;&nbsp;<b>Value of closing WIP</b>", "",
+                                 "<b>6,600</b>"]}], "33,600")
+
+    pa = acct("(d) Process A Account",
+      [("To Material", 2000, "", 18000),
+       ("To Labour", "", "", 9000),
+       ("To Overheads", "", "", 6600),
+       ("TOT", 2000, "", 33600)],
+      [("By Transfer to next process" + src("1,500 &times; " + R + "18"), 1500, 18.00, 27000),
+       ("By Closing WIP" + src("statement (c)"), 500, "", 6600),
+       None,
+       ("TOT", 2000, "", 33600)])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q17", "The four statements, cleanest case",
+                        "Equivalent production &middot; p.13")
+            + question(q) + read(rd) + s1 + s2 + s3 + pa
+            + trap(bullets([
+                'Dividing all three costs by 2,000. Only material has 2,000 equivalent units.',
+                'Valuing closing WIP at 500 &times; total rate 18 = 9,000. Wrong &mdash; you must '
+                'value each element on <b>its own</b> equivalent units, giving 6,600.',
+                'Skipping the statement of evaluation and jumping to the account. The three '
+                'statements each carry marks of their own.']))
+            + ans([("Cost per unit &mdash; Material / Labour / Overhead",
+                    f"{R} 9.00 / {R} 5.00 / {R} 4.00"),
+                   ("Total cost per unit", f"{R} 18.00"),
+                   ("Value of 1,500 units transferred", f"{R} 27,000"),
+                   ("Value of closing WIP (500 units)", f"{R} 6,600"),
+                   ("Process account total", f"{R} 33,600")],
+                  "Proof: 18,000 + 9,000 + 6,600 = 33,600 = 27,000 + 6,600 &#10003;")
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 18
+# ======================================================================
+def q18():
+    q = f"""<p>During January 2,000 units were introduced into Process 1. The normal loss was
+estimated at 5% on input. At the end of the month 1,400 units had been produced and transferred to
+the next process. 460 units were incomplete and 140 units had been scrapped. It was estimated that
+incomplete units had reached a stage in production as follows: Material 75% complete, Labour 50%
+complete and overheads 50% complete.</p>
+<p>The cost of 2,000 units introduced was <span class="rs">{R}</span>5,800. Direct material
+introduced during the process amounted to <span class="rs">{R}</span>1,440. Direct labour cost was
+<span class="rs">{R}</span>3,340. Production overheads incurred were
+<span class="rs">{R}</span>1,670. Units scrapped realised <span class="rs">{R}</span>1 each. The
+units scrapped have passed through the processes so were 100% complete as regards material, labour
+and overheads.</p>
+<p>You are required to (a) prepare a statement of equivalent production (b) evaluate the cost of
+abnormal loss, finished goods and closing stock and (c) prepare the Process 1 a/c and abnormal
+loss a/c.</p>"""
+
+    rd = f"""{bullets([
+ 'Units: 2,000 = 1,400 transferred + 460 WIP + 140 scrapped. Balanced &#10003;',
+ '<b>Normal loss = 5% of 2,000 = 100 units.</b> Actually scrapped = 140. So '
+ '<b>abnormal loss = 40 units</b>.',
+ '<b>Normal loss gets NIL equivalent units</b> in the statement. Abnormal loss gets 100% in every '
+ 'element, because the question tells you the scrapped units were fully processed.',
+ 'The scrap money of ' + R + '1 per unit applies to the <b>normal loss units only</b> when you '
+ 'reduce the material cost. The abnormal loss units also fetch ' + R + '1 each, but that goes in '
+ 'the Abnormal Loss account, not in the cost statement.'])}"""
+
+    s1 = eqstmt("(a) Statement of Equivalent Production",
+      [("Units completed &amp; transferred", "1,400",
+        [("100", "1,400"), ("100", "1,400"), ("100", "1,400")]),
+       ("Normal loss (5% of 2,000)", "100",
+        [("&mdash;", "<b>Nil</b>"), ("&mdash;", "<b>Nil</b>"), ("&mdash;", "<b>Nil</b>")], "sub"),
+       ("Abnormal loss", "40", [("100", "40"), ("100", "40"), ("100", "40")]),
+       ("Closing work-in-progress", "460",
+        [("75", "345"), ("50", "230"), ("50", "230")])],
+      ["1,785", "1,670", "1,670"])
+
+    s2 = f"""{coststmt("(b1) Statement of Cost",
+      [["Material &nbsp;<span class='src' style='display:inline'>5,800 + 1,440 &minus; 100 scrap</span>",
+        "7,140", "1,785", "<b>4.00</b>"],
+       ["Labour", "3,340", "1,670", "<b>2.00</b>"],
+       ["Overhead", "1,670", "1,670", "<b>1.00</b>"]], "7.00")}
+{calc([f'Material cost &nbsp;=&nbsp; cost of units introduced 5,800 + material added 1,440 '
+        f'&nbsp;=&nbsp; 7,240',
+       f'Less: scrap value of <b>normal loss</b> 100 units &times; {R}1 &nbsp;=&nbsp; (100)',
+       f'<b>Net material cost &nbsp;=&nbsp; {R}7,140</b>'])}"""
+
+    s3 = evalstmt("(b2) Statement of Evaluation",
+      [["Units completed &amp; transferred", f"1,400 &times; {R}7.00", "9,800"],
+       ["Abnormal loss", f"40 &times; {R}7.00", "280"],
+       {"cls": "sub", "cells": ["<b>Closing work-in-progress</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;Material", f"345 EU &times; {R}4.00", "1,380"],
+       ["&nbsp;&nbsp;&nbsp;Labour", f"230 EU &times; {R}2.00", "460"],
+       ["&nbsp;&nbsp;&nbsp;Overhead", f"230 EU &times; {R}1.00", "230"],
+       {"cls": "sub", "cells": ["&nbsp;&nbsp;&nbsp;<b>Value of closing WIP</b>", "",
+                                 "<b>2,070</b>"]}], "12,150")
+
+    pa = acct("(c) Process 1 Account",
+      [("To Units introduced", 2000, "", 5800),
+       ("To Direct material", "", "", 1440),
+       ("To Direct labour", "", "", 3340),
+       ("To Production overheads", "", "", 1670),
+       ("TOT", 2000, "", 12250)],
+      [("By Normal loss" + src("100 units &times; " + R + "1"), 100, 1.00, 100),
+       ("By Abnormal loss" + src("40 &times; " + R + "7"), 40, 7.00, 280),
+       ("By Transfer to next process" + src("1,400 &times; " + R + "7"), 1400, 7.00, 9800),
+       ("By Closing WIP" + src("statement (b2)"), 460, "", 2070),
+       ("TOT", 2000, "", 12250)])
+
+    al = acct("Abnormal Loss Account",
+      [("To Process 1 A/c", 40, 7.00, 280), ("TOT", 40, "", 280)],
+      [("By Cash / Cost Ledger (scrap)" + src("40 &times; " + R + "1"), 40, 1.00, 40),
+       ("By Profit &amp; Loss A/c", "", "", 240),
+       ("TOT", 40, "", 280)])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q18", "Equivalent production with abnormal loss",
+                        "Equivalent production &middot; p.14")
+            + question(q) + read(rd) + s1 + s2 + s3 + pa + al
+            + trap(bullets([
+                '<b>Giving the normal loss 100 equivalent units.</b> It gets nil. This is the '
+                'single most common error in the topic.',
+                'Deducting the scrap of all 140 scrapped units (140) from material cost instead '
+                'of only the normal loss 100.',
+                'Forgetting that the abnormal loss must be valued at the full rate of 7.00 even '
+                'though it only sells for 1.00.']))
+            + ans([("Equivalent units &mdash; Material / Labour / Overhead", "1,785 / 1,670 / 1,670"),
+                   ("Cost per unit &mdash; Material / Labour / Overhead",
+                    f"{R} 4.00 / {R} 2.00 / {R} 1.00"),
+                   ("Total cost per unit", f"{R} 7.00"),
+                   ("Finished goods (1,400 units)", f"{R} 9,800"),
+                   ("Abnormal loss (40 units)", f"{R} 280 &mdash; net to P&amp;L {R} 240"),
+                   ("Closing stock (460 units)", f"{R} 2,070")],
+                  "Proof: 12,250 debits = 100 + 280 + 9,800 + 2,070 = 12,250 &#10003;")
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 19
+# ======================================================================
+def q19():
+    q = f"""<p>Prepare statement of equivalent production, statement of cost and process a/c from
+the following information.</p>
+{table(None, [("Particulars",""),("","r")],
+ [["Units introduced","7,600"],["Output (units)","6,000"],
+  ["Process cost &mdash; Materials", R + " 14,560"],
+  ["Process cost &mdash; Labour", R + " 21,360"],
+  ["Process cost &mdash; Overheads", R + " 14,240"],
+  ["Degree of completion for closing WIP &mdash; Materials","80%"],
+  ["Degree of completion for closing WIP &mdash; Labour","70%"],
+  ["Degree of completion for closing WIP &mdash; Overheads","70%"]], headcls="lite",
+ widths=["62%","38%"])}"""
+
+    rd = f"""{bullets([
+ 'The closing WIP figure is <b>not given</b> &mdash; you must derive it: 7,600 introduced '
+ '&minus; 6,000 output = <b>1,600 units</b> of closing WIP.',
+ 'No losses are mentioned and the units balance exactly, so there is no normal or abnormal loss '
+ 'working at all.',
+ 'No opening WIP either, so the FIFO / average question does not arise.'])}"""
+
+    s1 = eqstmt("Statement of Equivalent Production",
+      [("Units completed &amp; transferred", "6,000",
+        [("100", "6,000"), ("100", "6,000"), ("100", "6,000")]),
+       ("Closing WIP &nbsp;<span class='src' style='display:inline'>7,600 &minus; 6,000</span>",
+        "1,600", [("80", "1,280"), ("70", "1,120"), ("70", "1,120")])],
+      ["7,280", "7,120", "7,120"])
+
+    s2 = coststmt("Statement of Cost",
+      [["Material", "14,560", "7,280", "<b>2.00</b>"],
+       ["Labour", "21,360", "7,120", "<b>3.00</b>"],
+       ["Overhead", "14,240", "7,120", "<b>2.00</b>"]], "7.00")
+
+    s3 = evalstmt("Statement of Evaluation",
+      [["Units completed &amp; transferred", f"6,000 &times; {R}7.00", "42,000"],
+       {"cls": "sub", "cells": ["<b>Closing work-in-progress</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;Material", f"1,280 EU &times; {R}2.00", "2,560"],
+       ["&nbsp;&nbsp;&nbsp;Labour", f"1,120 EU &times; {R}3.00", "3,360"],
+       ["&nbsp;&nbsp;&nbsp;Overhead", f"1,120 EU &times; {R}2.00", "2,240"],
+       {"cls": "sub", "cells": ["&nbsp;&nbsp;&nbsp;<b>Value of closing WIP</b>", "",
+                                 "<b>8,160</b>"]}], "50,160")
+
+    pa = acct("Process Account",
+      [("To Materials", 7600, "", 14560),
+       ("To Labour", "", "", 21360),
+       ("To Overheads", "", "", 14240),
+       ("TOT", 7600, "", 50160)],
+      [("By Transfer to next process", 6000, 7.00, 42000),
+       ("By Closing WIP", 1600, "", 8160),
+       None,
+       ("TOT", 7600, "", 50160)])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q19", "Closing WIP has to be derived",
+                        "Equivalent production &middot; p.14")
+            + question(q) + read(rd) + s1 + s2 + s3 + pa
+            + ans([("Closing WIP (derived)", "1,600 units"),
+                   ("Equivalent units &mdash; Material / Labour / Overhead", "7,280 / 7,120 / 7,120"),
+                   ("Cost per unit", f"{R} 2.00 + {R} 3.00 + {R} 2.00 = <b>{R} 7.00</b>"),
+                   ("Transferred out (6,000 units)", f"{R} 42,000"),
+                   ("Closing WIP", f"{R} 8,160")],
+                  "Proof: 14,560 + 21,360 + 14,240 = 50,160 = 42,000 + 8,160 &#10003;")
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 20
+# ======================================================================
+def q20():
+    q = f"""<p>Prepare the process account from the following. Number of units introduced into the
+process &mdash; 4,000 units. Units completed and transferred &mdash; 3,000 units. Work-in-progress
+at the end of the period &mdash; 800 units (stage of completion material 80%, labour 70% and
+overheads 70%). Normal loss at the end of the period estimated 200 units (scrap value at
+<span class="rs">{R}</span>1 per unit). Value of materials <span class="rs">{R}</span>7,480,
+wages <span class="rs">{R}</span>10,680 and overheads <span class="rs">{R}</span>7,120.</p>"""
+
+    rd = f"""{bullets([
+ 'Units: 4,000 = 3,000 transferred + 800 WIP + 200 normal loss. Balanced exactly, so '
+ '<b>there is no abnormal loss or gain</b> &mdash; do not invent one.',
+ 'Normal loss again takes <b>nil equivalent units</b>, and its scrap value of 200 &times; ' + R +
+ '1 = ' + R + '200 comes off the material cost.'])}"""
+
+    s1 = eqstmt("Statement of Equivalent Production",
+      [("Units completed &amp; transferred", "3,000",
+        [("100", "3,000"), ("100", "3,000"), ("100", "3,000")]),
+       ("Normal loss", "200",
+        [("&mdash;", "<b>Nil</b>"), ("&mdash;", "<b>Nil</b>"), ("&mdash;", "<b>Nil</b>")], "sub"),
+       ("Closing WIP", "800", [("80", "640"), ("70", "560"), ("70", "560")])],
+      ["3,640", "3,560", "3,560"])
+
+    s2 = coststmt("Statement of Cost",
+      [["Material &nbsp;<span class='src' style='display:inline'>7,480 &minus; 200 scrap</span>",
+        "7,280", "3,640", "<b>2.00</b>"],
+       ["Wages", "10,680", "3,560", "<b>3.00</b>"],
+       ["Overhead", "7,120", "3,560", "<b>2.00</b>"]], "7.00")
+
+    s3 = evalstmt("Statement of Evaluation",
+      [["Units completed &amp; transferred", f"3,000 &times; {R}7.00", "21,000"],
+       {"cls": "sub", "cells": ["<b>Closing work-in-progress</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;Material", f"640 EU &times; {R}2.00", "1,280"],
+       ["&nbsp;&nbsp;&nbsp;Wages", f"560 EU &times; {R}3.00", "1,680"],
+       ["&nbsp;&nbsp;&nbsp;Overhead", f"560 EU &times; {R}2.00", "1,120"],
+       {"cls": "sub", "cells": ["&nbsp;&nbsp;&nbsp;<b>Value of closing WIP</b>", "",
+                                 "<b>4,080</b>"]}], "25,080")
+
+    pa = acct("Process Account",
+      [("To Materials", 4000, "", 7480),
+       ("To Wages", "", "", 10680),
+       ("To Overheads", "", "", 7120),
+       ("TOT", 4000, "", 25280)],
+      [("By Normal loss" + src("200 &times; " + R + "1"), 200, 1.00, 200),
+       ("By Transfer to next process", 3000, 7.00, 21000),
+       ("By Closing WIP", 800, "", 4080),
+       ("TOT", 4000, "", 25280)])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q20", "Normal loss, no abnormal item",
+                        "Equivalent production &middot; p.14")
+            + question(q) + read(rd) + s1 + s2 + s3 + pa
+            + ans([("Equivalent units &mdash; Material / Wages / Overhead", "3,640 / 3,560 / 3,560"),
+                   ("Cost per unit", f"{R} 2.00 + {R} 3.00 + {R} 2.00 = <b>{R} 7.00</b>"),
+                   ("Transferred out (3,000 units)", f"{R} 21,000"),
+                   ("Closing WIP (800 units)", f"{R} 4,080"),
+                   ("Normal loss scrap", f"{R} 200")],
+                  "Proof: 25,280 = 200 + 21,000 + 4,080 = 25,280 &#10003;")
+            + "</div>")
+
+
+
+# ======================================================================
+# PROBLEM 21  (FIFO, opening WIP)
+# ======================================================================
+def q21():
+    q = f"""<p>A company follows process costing and manufactures a product in one process. The
+work-in-process at the end of each month is valued according to <b>FIFO</b> method. At the
+beginning of the month of January, the inventory of WIP showed 400 units, 40% completed, valued as
+follows: Materials <span class="rs">{R}</span>3,600; Labour <span class="rs">{R}</span>3,400;
+Overheads <span class="rs">{R}</span>1,000 &mdash; total <span class="rs">{R}</span>8,000.</p>
+<p>In the month of January, materials were purchased for <span class="rs">{R}</span>75,000. Wages
+and overheads in the month amounted to <span class="rs">{R}</span>79,800 and
+<span class="rs">{R}</span>21,280 respectively. <b>Actual issue of materials to production was
+<span class="rs">{R}</span>68,500.</b> Finished production taken into the stock in the month was
+2,500 units. There was no loss in the process. At the end of the month, the WIP inventory was 500
+units and 80% complete as regards materials and 60% complete as regards labour and overhead.</p>
+<p>You are required to compute equivalent production and prepare process account.</p>"""
+
+    rd = f"""{bullets([
+ '<b>The ' + R + '75,000 of purchases is a deliberate trap.</b> Purchases are not a process cost. '
+ 'Only what is <b>issued to production</b> &mdash; ' + R + '68,500 &mdash; enters the process. Use '
+ '68,500 and ignore 75,000.',
+ '<b>FIFO is stated explicitly.</b> So the opening WIP of 400 units, already 40% done, needs only '
+ 'the remaining <b>60%</b> of work this month &rarr; 240 equivalent units in each element.',
+ 'Units introduced must be derived: 2,500 completed + 500 closing WIP &minus; 400 opening WIP = '
+ '<b>2,600 units introduced</b>.',
+ 'Under FIFO the <b>opening WIP cost of ' + R + '8,000 is kept out of the rate</b>. It is added '
+ 'back only when you value the finished goods.'])}"""
+
+    wnh = f"""<h4 class="mini">W1 &nbsp;Unit flow</h4>
+{calc(['Opening WIP &nbsp;=&nbsp; 400 units &nbsp;&nbsp;|&nbsp;&nbsp; Completed &nbsp;=&nbsp; '
+       '2,500 units &nbsp;&nbsp;|&nbsp;&nbsp; Closing WIP &nbsp;=&nbsp; 500 units',
+       '<b>Units introduced &nbsp;=&nbsp; 2,500 + 500 &minus; 400 &nbsp;=&nbsp; 2,600 units</b>',
+       'Of the 2,500 completed, 400 came from opening WIP &nbsp;&rarr;&nbsp; '
+       '<b>2,100 were introduced and completed this month</b>'])}"""
+
+    s1 = eqstmt("Statement of Equivalent Production &mdash; FIFO",
+      [("Opening WIP &mdash; work still to do &nbsp;<span class='src' style='display:inline'>"
+        "40% done, so 60% remains</span>", "400",
+        [("60", "240"), ("60", "240"), ("60", "240")]),
+       ("Introduced and completed this month", "2,100",
+        [("100", "2,100"), ("100", "2,100"), ("100", "2,100")]),
+       ("Closing WIP", "500", [("80", "400"), ("60", "300"), ("60", "300")])],
+      ["2,740", "2,640", "2,640"])
+
+    s2 = f"""{coststmt("Statement of Cost &mdash; this month&rsquo;s costs only",
+      [["Material &nbsp;<span class='src' style='display:inline'>issued, not purchased</span>",
+        "68,500", "2,740", "<b>25.0000</b>"],
+       ["Labour", "79,800", "2,640", "<b>30.2273</b>"],
+       ["Overhead", "21,280", "2,640", "<b>8.0606</b>"]], "63.2879")}
+<p class="small">The labour and overhead rates do not come out round in this problem. Carry four
+decimal places through the evaluation and the process account will still balance to the rupee &mdash;
+which is shown below.</p>"""
+
+    s3 = evalstmt("Statement of Evaluation",
+      [{"cls": "sub", "cells": ["<b>1. Opening WIP completed (400 units)</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;Cost brought forward", "given", "8,000.00"],
+       ["&nbsp;&nbsp;&nbsp;Material to finish", f"240 EU &times; {R}25.0000", "6,000.00"],
+       ["&nbsp;&nbsp;&nbsp;Labour to finish", f"240 EU &times; {R}30.2273", "7,254.55"],
+       ["&nbsp;&nbsp;&nbsp;Overhead to finish", f"240 EU &times; {R}8.0606", "1,934.55"],
+       {"cls": "sub", "cells": ["&nbsp;&nbsp;&nbsp;<b>Total for the 400 units</b>", "",
+                                 "<b>23,189.10</b>"]},
+       {"cls": "sub", "cells": ["<b>2. Introduced and completed (2,100 units)</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;At full cost", f"2,100 &times; {R}63.2879", "1,32,904.55"],
+       {"cls": "sub", "cells": ["<b>3. Closing WIP (500 units)</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;Material", f"400 EU &times; {R}25.0000", "10,000.00"],
+       ["&nbsp;&nbsp;&nbsp;Labour", f"300 EU &times; {R}30.2273", "9,068.18"],
+       ["&nbsp;&nbsp;&nbsp;Overhead", f"300 EU &times; {R}8.0606", "2,418.18"],
+       {"cls": "sub", "cells": ["&nbsp;&nbsp;&nbsp;<b>Value of closing WIP</b>", "",
+                                 "<b>21,486.36</b>"]}], "1,77,580.01")
+
+    pa = acct("Process Account",
+      [("To Opening WIP", 400, "", 8000),
+       ("To Materials issued", 2600, "", 68500),
+       ("To Wages", "", "", 79800),
+       ("To Overheads", "", "", 21280),
+       ("TOT", 3000, "", 177580)],
+      [("By Finished goods transferred" + src("23,189.10 + 1,32,904.55"), 2500, "", 156093.65),
+       ("By Closing WIP", 500, "", 21486.36),
+       None, None,
+       ("TOT", 3000, "", 177580.01)])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q21", "FIFO with opening work-in-progress",
+                        "Equivalent production &middot; p.15")
+            + question(q) + read(rd) + wn(wnh) + s1 + s2 + s3 + pa
+            + trap(bullets([
+                f'Using the {R}75,000 <b>purchases</b> figure instead of the {R}68,500 '
+                '<b>issued</b> figure. Purchases go to the stores account, not the process.',
+                'Giving the opening WIP 400 equivalent units. Under FIFO it gets only the 240 '
+                'that represent work done <i>this</i> month.',
+                f'Adding the opening WIP cost of {R}8,000 into the numerator before dividing. '
+                'Under FIFO it stays out of the rate and is added back at evaluation.']))
+            + ans([("Units introduced (derived)", "2,600"),
+                   ("Equivalent units &mdash; Material / Labour / Overhead", "2,740 / 2,640 / 2,640"),
+                   ("Cost per unit &mdash; Material", f"{R} 25.0000"),
+                   ("Cost per unit &mdash; Labour", f"{R} 30.2273"),
+                   ("Cost per unit &mdash; Overhead", f"{R} 8.0606"),
+                   ("Finished goods (2,500 units)", f"{R} 1,56,093.65"),
+                   ("Closing WIP (500 units)", f"{R} 21,486.36")],
+                  "Proof: 8,000 + 68,500 + 79,800 + 21,280 = 1,77,580 and "
+                  "1,56,093.65 + 21,486.36 = 1,77,580.01 &#10003; (1 paisa rounding).")
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 22
+# ======================================================================
+def q22():
+    q = f"""<p>Prepare Process 2 account from the following. Opening stock 600 units at
+<span class="rs">{R}</span>1,050 (degree of completion material 80%, labour 60%, overheads 60%).
+Transfer from Process 1 &mdash; 11,000 units at <span class="rs">{R}</span>5,500. Transfer to
+Process 3 &mdash; 8,800 units. Direct material added in Process 2 &mdash;
+<span class="rs">{R}</span>2,410. Direct labour <span class="rs">{R}</span>7,155, Production
+overhead <span class="rs">{R}</span>9,540. Units scrapped &mdash; 1,200 (degree of completion
+material 100%, labour 70% and overheads 70%). Closing stock 1,600 units (degree of completion
+material 70%, labour 60%, overheads 60%). There was a normal loss in the process at 10% of
+production. Units scrapped would realise 50 paise per unit.</p>"""
+
+    rd = f"""{bullets([
+ 'Units in: opening 600 + received 11,000 = 11,600. Units out: 8,800 + 1,200 scrapped + 1,600 '
+ 'closing = 11,600 &#10003;',
+ '<b>&ldquo;Normal loss at 10% of production&rdquo; is ambiguous wording.</b> The standard reading '
+ 'is 10% of the units <b>introduced into the process from Process 1</b> = 10% of 11,000 = '
+ '<b>1,100 units</b>. State your assumption in one line. Abnormal loss then = 1,200 &minus; 1,100 '
+ '= <b>100 units</b>.',
+ 'The opening stock&rsquo;s degrees of completion are given element by element, so <b>use FIFO</b>.',
+ 'Two material figures must be added: the ' + R + '5,500 transferred in and the ' + R + '2,410 '
+ 'added here. Then take off the normal loss scrap of 1,100 &times; ' + R + '0.50 = ' + R + '550.'])}"""
+
+    wnh = f"""<h4 class="mini">W1 &nbsp;Loss analysis (assumption stated)</h4>
+{calc([f'Normal loss &nbsp;=&nbsp; 10% of 11,000 units introduced &nbsp;=&nbsp; <b>1,100 units</b>',
+       'Units actually scrapped &nbsp;=&nbsp; 1,200 units',
+       '<b>Abnormal loss &nbsp;=&nbsp; 1,200 &minus; 1,100 &nbsp;=&nbsp; 100 units</b>',
+       f'Scrap credit taken to cost statement &nbsp;=&nbsp; 1,100 &times; {R}0.50 &nbsp;=&nbsp; '
+       f'<b>{R}550</b>'])}
+
+<h4 class="mini">W2 &nbsp;FIFO unit flow</h4>
+{calc(['Opening stock 600 units, so of the 8,800 transferred out, 600 came from opening stock',
+       '<b>Introduced and completed &nbsp;=&nbsp; 8,800 &minus; 600 &nbsp;=&nbsp; 8,200 units</b>'])}"""
+
+    s1 = eqstmt("Statement of Equivalent Production &mdash; FIFO",
+      [("Opening stock &mdash; work still to do &nbsp;<span class='src' style='display:inline'>"
+        "Mat 20%, Lab 40%, OH 40%</span>", "600",
+        [("20", "120"), ("40", "240"), ("40", "240")]),
+       ("Introduced and completed", "8,200",
+        [("100", "8,200"), ("100", "8,200"), ("100", "8,200")]),
+       ("Normal loss (W1)", "1,100",
+        [("&mdash;", "<b>Nil</b>"), ("&mdash;", "<b>Nil</b>"), ("&mdash;", "<b>Nil</b>")], "sub"),
+       ("Abnormal loss (W1)", "100", [("100", "100"), ("70", "70"), ("70", "70")]),
+       ("Closing stock", "1,600", [("70", "1,120"), ("60", "960"), ("60", "960")])],
+      ["9,540", "9,470", "9,470"])
+
+    s2 = coststmt("Statement of Cost",
+      [["Material &nbsp;<span class='src' style='display:inline'>5,500 + 2,410 &minus; 550</span>",
+        "7,360", "9,540", "<b>0.7715</b>"],
+       ["Labour", "7,155", "9,470", "<b>0.7555</b>"],
+       ["Overhead", "9,540", "9,470", "<b>1.0074</b>"]], "2.5344")
+
+    s3 = evalstmt("Statement of Evaluation",
+      [{"cls": "sub", "cells": ["<b>1. Opening stock completed (600 units)</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;Cost brought forward", "given", "1,050.00"],
+       ["&nbsp;&nbsp;&nbsp;Material to finish", f"120 EU &times; {R}0.7715", "92.58"],
+       ["&nbsp;&nbsp;&nbsp;Labour to finish", f"240 EU &times; {R}0.7555", "181.33"],
+       ["&nbsp;&nbsp;&nbsp;Overhead to finish", f"240 EU &times; {R}1.0074", "241.77"],
+       {"cls": "sub", "cells": ["&nbsp;&nbsp;&nbsp;<b>Sub-total</b>", "", "<b>1,565.68</b>"]},
+       {"cls": "sub", "cells": ["<b>2. Introduced and completed (8,200 units)</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;At full cost", f"8,200 &times; {R}2.5344", "20,782.28"],
+       {"cls": "tot", "cells": ["<b>Transferred to Process 3 (8,800 units)</b>", "",
+                                 "<b>22,347.96</b>"]},
+       {"cls": "sub", "cells": ["<b>3. Abnormal loss (100 units)</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;Material / Labour / Overhead",
+        "100&times;0.7715 + 70&times;0.7555 + 70&times;1.0074", "200.56"],
+       {"cls": "sub", "cells": ["<b>4. Closing stock (1,600 units)</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;Material", f"1,120 EU &times; {R}0.7715", "864.07"],
+       ["&nbsp;&nbsp;&nbsp;Labour", f"960 EU &times; {R}0.7555", "725.32"],
+       ["&nbsp;&nbsp;&nbsp;Overhead", f"960 EU &times; {R}1.0074", "967.10"],
+       {"cls": "sub", "cells": ["&nbsp;&nbsp;&nbsp;<b>Value of closing stock</b>", "",
+                                 "<b>2,556.49</b>"]}], "25,105.01")
+
+    pa = acct("Process 2 Account",
+      [("To Opening stock", 600, "", 1050),
+       ("To Transfer from Process 1", 11000, 0.50, 5500),
+       ("To Direct material added", "", "", 2410),
+       ("To Direct labour", "", "", 7155),
+       ("To Production overhead", "", "", 9540),
+       ("TOT", 11600, "", 25655)],
+      [("By Normal loss" + src("1,100 &times; " + R + "0.50"), 1100, 0.50, 550),
+       ("By Abnormal loss", 100, "", 200.56),
+       ("By Transfer to Process 3", 8800, "", 22347.96),
+       ("By Closing stock", 1600, "", 2556.49),
+       None,
+       ("TOT", 11600, "", 25655.01)])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q22", "FIFO with scrap and two material inputs",
+                        "Equivalent production &middot; p.15")
+            + question(q) + read(rd) + wn(wnh) + s1 + s2 + s3 + pa
+            + trap(f"""<p><b>About the ambiguous wording.</b> &ldquo;Normal loss at 10% of
+production&rdquo; could be read as 10% of units introduced (1,100), 10% of total input including
+opening stock (1,160), or 10% of output transferred (880). I have used <b>10% of units introduced
+= 1,100</b>, which is the most common convention. In the exam, <b>write down which basis you have
+used</b> in one line. Method marks are given for a stated, consistent assumption; they are lost only
+for silence.</p>""")
+            + ans([("Normal loss / Abnormal loss", "1,100 units / 100 units"),
+                   ("Equivalent units &mdash; Material / Labour / Overhead", "9,540 / 9,470 / 9,470"),
+                   ("Cost per unit", f"{R} 0.7715 + {R} 0.7555 + {R} 1.0074 = <b>{R} 2.5344</b>"),
+                   ("Transferred to Process 3 (8,800 units)", f"{R} 22,347.96"),
+                   ("Abnormal loss (100 units)", f"{R} 200.56"),
+                   ("Closing stock (1,600 units)", f"{R} 2,556.49")],
+                  "Proof: debits 1,050 + 5,500 + 2,410 + 7,155 + 9,540 = 25,655 and credits "
+                  "550 + 200.56 + 22,347.96 + 2,556.49 = 25,655.01 &#10003;")
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 23  (AVERAGE method)
+# ======================================================================
+def q23():
+    q = f"""<p>The following figures relate to a single industrial process. Opening stock 10,000
+units &mdash; Material <span class="rs">{R}</span>2,250, Wages <span class="rs">{R}</span>650,
+Overheads <span class="rs">{R}</span>400, total <span class="rs">{R}</span>3,300. Units introduced
+40,000 units &mdash; Material <span class="rs">{R}</span>9,250, Labour
+<span class="rs">{R}</span>4,600, Overheads <span class="rs">{R}</span>3,100.</p>
+<p>During the period 30,000 units were completed and 20,000 units remained in process. The degree
+of completion of closing stock of WIP was: Materials 100%, Labour 25%, Overheads 25%. Make
+necessary computations and prepare process account by using the <b>average method</b>.</p>"""
+
+    rd = f"""{bullets([
+ '<b>The question says average method</b>, so everything changes from Q21 and Q22:',
+ 'The opening stock does <b>not</b> appear as a separate line in the equivalent production '
+ 'statement. Its 10,000 units are simply inside the 30,000 completed, at 100%.',
+ 'The opening stock <b>cost is merged</b> with this month&rsquo;s cost before you divide. Material '
+ 'becomes 2,250 + 9,250 = 11,500, and so on.',
+ 'Units: 10,000 + 40,000 = 50,000 = 30,000 completed + 20,000 WIP &#10003; no losses.'])}"""
+
+    s1 = eqstmt("Statement of Equivalent Production &mdash; Average method",
+      [("Units completed &amp; transferred &nbsp;<span class='src' style='display:inline'>"
+        "includes the opening 10,000 at 100%</span>", "30,000",
+        [("100", "30,000"), ("100", "30,000"), ("100", "30,000")]),
+       ("Closing WIP", "20,000", [("100", "20,000"), ("25", "5,000"), ("25", "5,000")])],
+      ["50,000", "35,000", "35,000"])
+
+    s2 = coststmt("Statement of Cost &mdash; opening cost merged with current cost",
+      [["Material &nbsp;<span class='src' style='display:inline'>2,250 + 9,250</span>",
+        "11,500", "50,000", "<b>0.23</b>"],
+       ["Wages &nbsp;<span class='src' style='display:inline'>650 + 4,600</span>",
+        "5,250", "35,000", "<b>0.15</b>"],
+       ["Overheads &nbsp;<span class='src' style='display:inline'>400 + 3,100</span>",
+        "3,500", "35,000", "<b>0.10</b>"]], "0.48")
+
+    s3 = evalstmt("Statement of Evaluation",
+      [["Units completed &amp; transferred", f"30,000 &times; {R}0.48", "14,400"],
+       {"cls": "sub", "cells": ["<b>Closing work-in-progress</b>", "", ""]},
+       ["&nbsp;&nbsp;&nbsp;Material", f"20,000 EU &times; {R}0.23", "4,600"],
+       ["&nbsp;&nbsp;&nbsp;Wages", f"5,000 EU &times; {R}0.15", "750"],
+       ["&nbsp;&nbsp;&nbsp;Overheads", f"5,000 EU &times; {R}0.10", "500"],
+       {"cls": "sub", "cells": ["&nbsp;&nbsp;&nbsp;<b>Value of closing WIP</b>", "",
+                                 "<b>5,850</b>"]}], "20,250")
+
+    pa = acct("Process Account (average method)",
+      [("To Opening stock", 10000, "", 3300),
+       ("To Material", 40000, "", 9250),
+       ("To Labour", "", "", 4600),
+       ("To Overheads", "", "", 3100),
+       ("TOT", 50000, "", 20250)],
+      [("By Transfer to finished stock", 30000, 0.48, 14400),
+       ("By Closing WIP", 20000, "", 5850),
+       None, None,
+       ("TOT", 50000, "", 20250)])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q23", "The average method",
+                        "Equivalent production &middot; p.15&ndash;16")
+            + question(q) + read(rd) + s1 + s2 + s3 + pa
+            + why("<p>Notice how much shorter this is than Q21. Under the average method you never "
+                  "separate &ldquo;work done last month&rdquo; from &ldquo;work done this "
+                  "month&rdquo; &mdash; you pool everything and take one average rate. That is why it "
+                  "is the easier method, and why examiners often specify FIFO instead.</p>")
+            + ans([("Equivalent units &mdash; Material / Wages / Overheads",
+                    "50,000 / 35,000 / 35,000"),
+                   ("Cost per unit", f"{R} 0.23 + {R} 0.15 + {R} 0.10 = <b>{R} 0.48</b>"),
+                   ("Transferred out (30,000 units)", f"{R} 14,400"),
+                   ("Closing WIP (20,000 units)", f"{R} 5,850")],
+                  "Proof: 3,300 + 9,250 + 4,600 + 3,100 = 20,250 = 14,400 + 5,850 &#10003;")
+            + "</div>")
+
+
+# ======================================================================
+# PROBLEM 24  (FIFO and AVERAGE side by side)
+# ======================================================================
+def q24():
+    q = f"""<p>Prepare the statement of equivalent production from the following under
+<b>FIFO and Average Method</b>. Opening work-in-progress &mdash; 2,000 units (completed as material
+80%, labour 60% and overheads 60%). Units introduced and completed 5,000 units. Units remaining as
+closing work-in-progress &mdash; 3,000 units (completed as material 80%, labour and overheads 60%
+each). There are no process losses.</p>"""
+
+    rd = f"""{bullets([
+ 'No costs are given, so <b>only the two statements are wanted</b> &mdash; no cost statement, no '
+ 'evaluation, no process account. Answer exactly what is asked.',
+ 'Total units completed = opening WIP 2,000 (finished first) + 5,000 introduced and completed = '
+ '<b>7,000 units</b>. Units introduced = 5,000 + 3,000 closing = <b>8,000 units</b>.',
+ 'This is the best problem in the module for <b>seeing</b> the FIFO/average difference, because '
+ 'the same data gives two different answers. Work both and compare the totals.'])}"""
+
+    s1 = eqstmt("(a) Statement of Equivalent Production &mdash; FIFO method",
+      [("Opening WIP &mdash; work still to do &nbsp;<span class='src' style='display:inline'>"
+        "Mat 20%, Lab 40%, OH 40%</span>", "2,000",
+        [("20", "400"), ("40", "800"), ("40", "800")]),
+       ("Introduced and completed", "5,000",
+        [("100", "5,000"), ("100", "5,000"), ("100", "5,000")]),
+       ("Closing WIP", "3,000", [("80", "2,400"), ("60", "1,800"), ("60", "1,800")])],
+      ["7,800", "7,600", "7,600"])
+
+    s2 = eqstmt("(b) Statement of Equivalent Production &mdash; Average method",
+      [("Units completed &amp; transferred &nbsp;<span class='src' style='display:inline'>"
+        "2,000 opening + 5,000 = 7,000, all at 100%</span>", "7,000",
+        [("100", "7,000"), ("100", "7,000"), ("100", "7,000")]),
+       ("Closing WIP", "3,000", [("80", "2,400"), ("60", "1,800"), ("60", "1,800")])],
+      ["9,400", "8,800", "8,800"])
+
+    comp = table("The difference, side by side",
+      [("Element", ""), ("FIFO equivalent units", "r"), ("Average equivalent units", "r"),
+       ("Difference", "r"), ("Why", "")],
+      [["Material", "7,800", "9,400", "1,600",
+        "Average counts the opening WIP&rsquo;s material at 100% (2,000) instead of only the 20% "
+        "still to do (400). Difference = 2,000 &minus; 400 = 1,600."],
+       ["Labour", "7,600", "8,800", "1,200",
+        "2,000 at 100% instead of 800 &rarr; difference 1,200."],
+       ["Overhead", "7,600", "8,800", "1,200", "Same as labour."]],
+      headcls="lite", widths=["12%","17%","19%","12%","40%"])
+
+    return ("<div class='prob long'>"
+            + prob_head("Q24", "FIFO and average on the same data",
+                        "Equivalent production &middot; p.16")
+            + question(q) + read(rd) + s1 + s2 + comp
+            + why("<p>Average always gives the <b>larger</b> number of equivalent units, because it "
+                  "counts the whole of the opening WIP instead of just the unfinished part. Larger "
+                  "equivalent units with a larger cost pool (opening cost is merged in too) means "
+                  "the two methods usually give similar rates &mdash; but never identical ones. "
+                  "Whenever a question mentions opening WIP, your first job is to find out which "
+                  "method it wants.</p>")
+            + ans([("FIFO &mdash; Material / Labour / Overhead", "7,800 / 7,600 / 7,600"),
+                   ("Average &mdash; Material / Labour / Overhead", "9,400 / 8,800 / 8,800"),
+                   ("Units completed", "7,000"),
+                   ("Units introduced", "8,000")],
+                  "Under FIFO only the 400 / 800 / 800 of opening-WIP work belongs to this period; "
+                  "under average the full 2,000 units are counted at 100%.")
             + "</div>")
